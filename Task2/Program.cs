@@ -34,9 +34,12 @@
                         x = MoveXLeft(x, resolution);
                         break;
                     case ConsoleKey.Enter:
-                        state[y, x] = state[y, x] == initSymbol ? gameSymbol : state[y, x];
-                        gameSymbol = gamerSwitch ? "O" : "X";
-                        gamerSwitch = !gamerSwitch;
+                        if (state[y, x] == initSymbol)
+                        {
+                            state[y, x] = gameSymbol;
+                            gameSymbol = gamerSwitch ? "O" : "X";
+                            gamerSwitch = !gamerSwitch;
+                        }
                         break;
                 }
             }
