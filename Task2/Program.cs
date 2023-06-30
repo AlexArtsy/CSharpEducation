@@ -4,12 +4,15 @@
     {
         static void Main(string[] args)
         {
-            int resolution = 3;
-            string[,] state = CreateGameField(resolution);
+            int resolution = 6;
+            string initSymbol = "U";
+            string[,] state = CreateGameState(resolution, initSymbol);
             int row = Console.CursorTop;
             int col = Console.CursorLeft;
             int x = 0;
             int y = 0;
+            bool gamerSwitch = true;
+            string gameSymbol = "X";
             
             while (true)    //  Event loop
             {
@@ -29,6 +32,11 @@
                         break;
                     case ConsoleKey.LeftArrow:
                         x = MoveXLeft(x, resolution);
+                        break;
+                    case ConsoleKey.Enter:
+                        state[y, x] = state[y, x] == initSymbol ? gameSymbol : state[y, x];
+                        gameSymbol = gamerSwitch ? "O" : "X";
+                        gamerSwitch = !gamerSwitch;
                         break;
                 }
             }
@@ -52,14 +60,14 @@
                 Console.Write("\n");
             }
         }
-        private static string[,] CreateGameField(int resolution)
+        private static string[,] CreateGameState(int resolution, string initSymbol)
         {
             string[,] field = new string[resolution, resolution]; 
             for (int i = 0; i < resolution; i += 1)
             {
                 for (int j = 0; j < resolution; j += 1)
                 {
-                    field[i, j] = "U";
+                    field[i, j] = initSymbol;
                 }
             }
             return field;
