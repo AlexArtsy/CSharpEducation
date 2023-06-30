@@ -14,7 +14,7 @@
             bool gamerSwitch = true;
             string gameSymbol = "X";
             
-            while (true)    //  Event loop
+            while (true)    //  Event loop 
             {
                 Render(state, y, x, resolution);
                 Console.Write($"x: {x} y: {y}");
@@ -34,7 +34,7 @@
                         x = MoveXLeft(x, resolution);
                         break;
                     case ConsoleKey.Enter:
-                        if (state[y, x] == initSymbol)
+                        if (state[y, x] == initSymbol)  //  проверяем, сделан ли ход в выбранной ячейке
                         {
                             state[y, x] = gameSymbol;
                             gameSymbol = gamerSwitch ? "O" : "X";
