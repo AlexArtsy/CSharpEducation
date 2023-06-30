@@ -34,7 +34,7 @@
                         x = MoveXLeft(x, resolution);
                         break;
                     case ConsoleKey.Enter:
-                        if (state[y, x] == initSymbol)  //  проверяем, сделан ли ход в выбранной ячейке
+                        if (state[y, x] == initSymbol)  //  проверяем, сделан ли ход в выбранной ячейке 
                         {
                             state[y, x] = gameSymbol;
                             gameSymbol = gamerSwitch ? "O" : "X";
