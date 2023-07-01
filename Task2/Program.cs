@@ -46,7 +46,7 @@
         }
         private static void Render(string[,] state, int row, int col, int resolution)
         {
-            Console.SetCursorPosition(0, 0);
+            Console.SetCursorPosition(0, 1);
 
             for (int i = 0; i < resolution; i += 1)
             {
@@ -57,10 +57,11 @@
                         Console.BackgroundColor = Console.ForegroundColor;
                         Console.ForegroundColor = ConsoleColor.Black;
                     }
-                    Console.Write(state[i,j]);
+                    Console.Write($" {state[i, j]} ");
                     Console.ResetColor();
                 }
-                Console.Write("\n");
+                //Console.Write("\n");
+                Console.WriteLine("\n");
             }
         }
         private static string[,] CreateGameState(int resolution, string initSymbol)
@@ -76,7 +77,7 @@
             return field;
         }
         private static int MoveXRight(int x, int resoluton) => x < resoluton - 1 ? (x + 1) : 0;
-        private static int MoveXLeft(int x, int resoluton) => x = x >= 1 ? (x - 1) : resoluton - 1;
+        private static int MoveXLeft(int x, int resoluton) => x >= 1 ? (x - 1) : resoluton - 1;
         private static int MoveYDown(int y, int resoluton) => y < resoluton - 1 ? (y + 1) : 0;
         private static int MoveYUp(int y, int resoluton) => y >= 1 ? (y - 1) : resoluton - 1;
 
