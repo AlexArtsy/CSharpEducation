@@ -13,14 +13,20 @@
             int y = 0;
             bool gamerSwitch = true;
             string gameSymbol = "X";
-            
+
+            Console.WriteLine("Для завершения нажмите ESC или Ctrl+C");
+
             while (true)    //  Event loop 
             {
-                Render(state, y, x, resolution);
+                
+                Render(5, 5, state, y, x, resolution);
+
                 Console.Write($"x: {x} y: {y}");
 
                 switch (Console.ReadKey(true).Key)
                 {
+                    case ConsoleKey.Escape:
+                        return;
                     case ConsoleKey.DownArrow:
                         y = MoveYDown(y, resolution);
                         break;
@@ -44,25 +50,32 @@
                 }
             }
         }
-        private static void Render(string[,] state, int row, int col, int resolution)
+        private static void Render(int col, int row, string[,] state, int x, int y, int resolution = 3)
         {
-            Console.SetCursorPosition(0, 1);
+
 
             for (int i = 0; i < resolution; i += 1)
             {
+                Console.SetCursorPosition(col, row + i);
                 for (int j = 0; j < resolution; j += 1)
                 {
-                    if (i == row && j == col)
+                    Console.SetCursorPosition(col + j, row + i);
+                    if (i == x && j == y)
                     {
                         Console.BackgroundColor = Console.ForegroundColor;
                         Console.ForegroundColor = ConsoleColor.Black;
                     }
-                    Console.Write($" {state[i, j]} ");
+                    Console.Write($"{state[i, j]}");
                     Console.ResetColor();
                 }
                 //Console.Write("\n");
                 Console.WriteLine("\n");
             }
+        }
+        private static void PrintGamerTurnStatus(int col, int row, string gameSymbol)
+        {
+            Console.SetCursorPosition(col, row);
+            Console.WriteLine($"Ходит игрок: {gameSymbol}");
         }
         private static string[,] CreateGameState(int resolution, string initSymbol)
         {
