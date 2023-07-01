@@ -18,8 +18,9 @@
 
             while (true)    //  Event loop 
             {
-                
-                Render(5, 5, state, y, x, resolution);
+                PrintGamerTurnStatus(col: 0, row: 3, gameSymbol);
+
+                Render(col: 5, row: 5, state, y, x, resolution);
 
                 Console.Write($"x: {x} y: {y}");
 
@@ -75,7 +76,8 @@
         private static void PrintGamerTurnStatus(int col, int row, string gameSymbol)
         {
             Console.SetCursorPosition(col, row);
-            Console.WriteLine($"Ходит игрок: {gameSymbol}");
+            string gamer = gameSymbol == "X" ? "крестики" : "нолики";
+            Console.WriteLine($"Ходит игрок: {gameSymbol} ({gamer})          ");
         }
         private static string[,] CreateGameState(int resolution, string initSymbol)
         {
