@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            int resolution = 6;
+            int resolution = 5;
             string initSymbol = "U";
             string[,] state = CreateGameState(resolution, initSymbol);
             int row = Console.CursorTop;
@@ -20,9 +20,14 @@
             {
                 PrintGamerTurnStatus(col: 0, row: 3, gameSymbol);
 
-                Render(col: 5, row: 5, state, y, x, resolution);
+                
 
+                RenderGamingField(col: 2, row: 5, state, y, x, resolution);
+
+                Console.SetCursorPosition(0, row + resolution * 2 + 6);
                 Console.Write($"x: {x} y: {y}");
+
+                
 
                 switch (Console.ReadKey(true).Key)
                 {
@@ -51,16 +56,23 @@
                 }
             }
         }
-        private static void Render(int col, int row, string[,] state, int x, int y, int resolution = 3)
+        private static void RenderGamingField(int col, int row, string[,] state, int x, int y, int resolution = 3)
         {
+            int xCursorPos = col;
+            int yCursorPos = row;
 
+            PrintGamingGrid(col: col - 2, row: row - 1, resolution);
 
             for (int i = 0; i < resolution; i += 1)
             {
-                Console.SetCursorPosition(col, row + i);
+                xCursorPos = col;
+                Console.SetCursorPosition(xCursorPos, yCursorPos);
+                
                 for (int j = 0; j < resolution; j += 1)
                 {
-                    Console.SetCursorPosition(col + j, row + i);
+                    
+                    Console.SetCursorPosition(xCursorPos, yCursorPos);
+
                     if (i == x && j == y)
                     {
                         Console.BackgroundColor = Console.ForegroundColor;
@@ -68,16 +80,41 @@
                     }
                     Console.Write($"{state[i, j]}");
                     Console.ResetColor();
+
+                    xCursorPos += 4;
                 }
-                //Console.Write("\n");
-                Console.WriteLine("\n");
+                yCursorPos += 2;
             }
+        }
+        private static void PrintGamingGrid(int col, int row, int resolution = 3)   //  понимаю, что это упоротость, но захотелось поразмять мозги
+        {
+            Console.SetCursorPosition(col, row);
+            String grid = "".PadRight(resolution * 4, '-') + "-\n";
+
+            for (int i = 0; i < resolution; i += 1)
+            {
+                grid += "|";
+                for (int j = 0; j < resolution; j += 1)
+                {
+                    grid += " U |";
+                }
+                grid += "\n".PadRight(resolution * 4, '-') + "--\n"; ;
+
+            }
+            /*String grid = "-------------" + "\n" +
+                            "| U | U | U |" + "\n" +
+                            "-------------" + "\n" +
+                            "| U | U | U |" + "\n" +
+                            "-------------" + "\n" +
+                            "| U | U | U |" + "\n" +
+                            "-------------" + "\n"; */
+            Console.WriteLine(grid);
         }
         private static void PrintGamerTurnStatus(int col, int row, string gameSymbol)
         {
             Console.SetCursorPosition(col, row);
             string gamer = gameSymbol == "X" ? "крестики" : "нолики";
-            Console.WriteLine($"Ходит игрок: {gameSymbol} ({gamer})          ");
+            Console.WriteLine($"Ходит игрок: {gameSymbol} ({gamer})          ");    //  пробелы в конце строки для затирания
         }
         private static string[,] CreateGameState(int resolution, string initSymbol)
         {
