@@ -3,7 +3,7 @@
     internal class Program
     {
         #region Поля и свойства
-        static int resolution = 4;
+        static int resolution = 6;
         static string[,] state = new string[resolution, resolution];
         #endregion
         #region Методы
@@ -86,7 +86,7 @@
         private static List<int[][]> CreateGameModel()
         {
             var gameModel = new List<int[][]>(resolution * 2 + 2);
-
+            //  Заполняем нашу модель всеми строками.
             for (int i = 0; i < resolution; i += 1)
             {
                 int[][] lineState = new int[resolution][];
@@ -96,16 +96,32 @@
                 }
                 gameModel.Add(lineState);
             }
-
-            //for (int i = 0; i < resolution; i += 1)
-            //{
-            //    int[][] colState = new int[resolution][];
-            //    for (int j = 0; j < resolution; j += 1)
-            //    {
-            //        colState[j] = new int[2] { j, i };
-            //    }
-            //    gameModel.Add(colState);
-            //}
+            //  Заполняем модель всеми столбцами игрового поля.
+            for (int i = 0; i < resolution; i += 1)
+            {
+                int[][] colState = new int[resolution][];
+                for (int j = 0; j < resolution; j += 1)
+                {
+                    colState[j] = new int[2] { j, i };
+                }
+                gameModel.Add(colState);
+            }
+            //  Записываем главную диагональ.
+            int[][] mainDiagonalState = new int[resolution][];
+            for (int i = 0; i < resolution; i += 1)
+            {
+                mainDiagonalState[i] = new int[2] { i, i };
+            }
+            gameModel.Add(mainDiagonalState);
+            //  Записываем в модель побочную диагональ.
+            int[][] sideDiagonalState = new int[resolution][];
+            int k = resolution - 1;
+            for (int i = 0; i < resolution; i += 1)
+            {
+                sideDiagonalState[i] = new int[2] { i, k };
+                k -= 1;
+            }
+            gameModel.Add(sideDiagonalState);
 
             return gameModel;
         }
@@ -180,7 +196,7 @@
         {
             Console.SetCursorPosition(col, row);
 
-            for (int i = 0; i < resolution; i += 1)
+            for (int i = 0; i < gameModel.Count; i += 1)
             {
                 int[][] line = gameModel[i];
                 for (int j = 0; j < resolution; j += 1)
