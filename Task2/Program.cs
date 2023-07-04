@@ -38,6 +38,7 @@
 
                 col = 0;
                 row = Console.CursorTop + 3;
+                ClearField(col, row);
                 PrintState(col, row, gameModel);
 
                 switch (Console.ReadKey(true).Key)  //  Слушаем нажатие кнопок.
@@ -63,6 +64,7 @@
                             state[y, x] = gameSymbol;
                             gameSymbol = gamerSwitch ? "O" : "X";
                             gamerSwitch = !gamerSwitch;
+                            gameModel = CheckGameModelState(gameModel);
                         }
                         break;
                 }
@@ -125,12 +127,43 @@
 
             return gameModel;
         }
-        static ref string GetValue(int i, int j)
+        private static List<int[][]> CheckGameModelState(List<int[][]> gameModel)
         {
-            return ref state[i, j];
+            List<int[][]> newModelState = gameModel;
+            for (int i = 0; i < gameModel.Count; i += 1)
+            {
+                bool hasX = Array.Exists(GetStateLine(gameModel[i]), (symbol) => symbol == "X");
+                bool hasO = Array.Exists(GetStateLine(gameModel[i]), (symbol) => symbol == "O");
+                if (hasX && hasO)
+                {
+                    newModelState.Remove(gameModel[i]);
+                }
+            }
+            return newModelState;
+        }
+
+        private static string[] GetStateLine(int[][] item)
+        {
+            string[] line = new string[resolution];
+            for (int i = 0; i < resolution; i += 1)
+            {
+                int x = item[i][0];
+                int y = item[i][1];
+                line[i] = state[x, y];
+            }
+            return line;
         }
         #endregion
         #region View
+        private static void ClearField(int col, int row)
+        {
+            Console.SetCursorPosition(col, row);
+
+            for (int i = 0; i < 30; i += 1)
+            {
+                Console.WriteLine("                       ");
+            }
+        }
         /// <summary>
         /// Печатаем на экран состояние хода игры: установленные крестики и нолики (либо пустоты).
         /// </summary>
