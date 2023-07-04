@@ -2,38 +2,50 @@
 {
     internal class Program
     {
+        #region Поля и свойства
+        static int resolution = 4;
+        static string[,] state = new string[resolution, resolution];
+        #endregion
+        #region Методы
+        #region Controller
         static void Main(string[] args)
         {
-            int resolution = 5;
-            string initSymbol = "U";
-            string[,] state = CreateGameState(resolution, initSymbol);
-            int row = Console.CursorTop;
-            int col = Console.CursorLeft;
+            state = CreateGameState();  //  Инициализируем игровое поле начальными символами " ".
+            List<int[][]> gameModel = CreateGameModel();
+
             int x = 0;
             int y = 0;
-            bool gamerSwitch = true;
-            string gameSymbol = "X";
+            bool gamerSwitch = true;    //  Переключатель для смены игрока.
+            string gameSymbol = "X";    //  Определяем кто из игроков ходит первым.
 
-            Console.WriteLine("Для завершения нажмите ESC или Ctrl+C");
+            int row = 0;
+            int col = 0;
+            PrintGameInfo(col, row);
+            PrintGamingGrid(col, row + 4);  //  Рисуем игровую сетку с 4 строки.
 
-            while (true)    //  Event loop 
+            while (true)    //  Event loop.
             {
-                PrintGamerTurnStatus(col: 0, row: 3, gameSymbol);
+                PrintGamerTurnStatus(col: 0, row: 3, gameSymbol);   //  Рисуем очередь игрока с 3-й строки.
 
-                
+                col = Console.CursorLeft + 2;   //  Определяем где находится курсор после отрисовки игрового поля и сдвигаем координату в центр ячейки
+                row = Console.CursorTop + 1;    //  Определяем где находится курсор после отрисовки игрового поля и сдвигаем на 1 строчки вниз.
+                RenderGamingField(col, row, xRoundCoordinate: x, yRoundCoordinate: y);
 
-                RenderGamingField(col: 2, row: 5, state, y, x, resolution);
-
-                Console.SetCursorPosition(0, row + resolution * 2 + 6);
+                col = Console.CursorLeft;
+                row = Console.CursorTop + 3;
+                Console.SetCursorPosition(0, row);
                 Console.Write($"x: {x} y: {y}");
 
-                
+                col = 0;
+                row = Console.CursorTop + 3;
+                PrintState(col, row, gameModel);
 
-                switch (Console.ReadKey(true).Key)
+                switch (Console.ReadKey(true).Key)  //  Слушаем нажатие кнопок.
                 {
                     case ConsoleKey.Escape:
                         return;
                     case ConsoleKey.DownArrow:
+                        
                         y = MoveYDown(y, resolution);
                         break;
                     case ConsoleKey.UpArrow:
@@ -46,7 +58,7 @@
                         x = MoveXLeft(x, resolution);
                         break;
                     case ConsoleKey.Enter:
-                        if (state[y, x] == initSymbol)  //  проверяем, сделан ли ход в выбранной ячейке 
+                        if (state[y, x] == " ")  //  Проверяем, сделан ли ход в выбранной ячейке.
                         {
                             state[y, x] = gameSymbol;
                             gameSymbol = gamerSwitch ? "O" : "X";
@@ -56,24 +68,76 @@
                 }
             }
         }
-        private static void RenderGamingField(int col, int row, string[,] state, int x, int y, int resolution = 3)
+        #endregion
+        #region Model
+        private static string[,] CreateGameState()
         {
-            int xCursorPos = col;
-            int yCursorPos = row;
+            string[,] field = new string[resolution, resolution];
+            for (int i = 0; i < resolution; i += 1)
+            {
+                for (int j = 0; j < resolution; j += 1)
+                {
+                    field[i, j] = " ";
+                }
+            }
+            return field;
+        }
 
-            PrintGamingGrid(col: col - 2, row: row - 1, resolution);
+        private static List<int[][]> CreateGameModel()
+        {
+            var gameModel = new List<int[][]>(resolution * 2 + 2);
+
+            for (int i = 0; i < resolution; i += 1)
+            {
+                int[][] lineState = new int[resolution][];
+                for (int j = 0; j < resolution; j += 1)
+                {
+                    lineState[j] = new int[2] { i, j };
+                }
+                gameModel.Add(lineState);
+            }
+
+            //for (int i = 0; i < resolution; i += 1)
+            //{
+            //    int[][] colState = new int[resolution][];
+            //    for (int j = 0; j < resolution; j += 1)
+            //    {
+            //        colState[j] = new int[2] { j, i };
+            //    }
+            //    gameModel.Add(colState);
+            //}
+
+            return gameModel;
+        }
+        static ref string GetValue(int i, int j)
+        {
+            return ref state[i, j];
+        }
+        #endregion
+        #region View
+        /// <summary>
+        /// Печатаем на экран состояние хода игры: установленные крестики и нолики (либо пустоты).
+        /// </summary>
+        /// <param name="col">Координата системного курсора по X</param>
+        /// <param name="row">Координата системного курсора по Y</param>
+        /// <param name="xRaundCoordinate">Координата пользовательского курсора по X</param>
+        /// <param name="yRaundCoordinate">Координата пользовательского курсора по Y</param>
+        private static void RenderGamingField(int col, int row, int xRoundCoordinate, int yRoundCoordinate)
+        {
+            int xCursorPos;
+            int yCursorPos = row;
 
             for (int i = 0; i < resolution; i += 1)
             {
                 xCursorPos = col;
                 Console.SetCursorPosition(xCursorPos, yCursorPos);
-                
+
                 for (int j = 0; j < resolution; j += 1)
                 {
-                    
+
                     Console.SetCursorPosition(xCursorPos, yCursorPos);
 
-                    if (i == x && j == y)
+                    if (j == xRoundCoordinate && i == yRoundCoordinate)
                     {
                         Console.BackgroundColor = Console.ForegroundColor;
                         Console.ForegroundColor = ConsoleColor.Black;
@@ -86,52 +150,70 @@
                 yCursorPos += 2;
             }
         }
-        private static void PrintGamingGrid(int col, int row, int resolution = 3)   //  понимаю, что это упоротость, но захотелось поразмять мозги
+
+        /// <summary>
+        /// Печатаем на экран красивую сетку.
+        /// Магические числа нужны для корректного отображения сетки: 4 - четыре символа, заполняющие ячейку "   |" либо "----".ю
+        /// </summary>
+        /// <param name="col">Координата системного курсора по X</param>
+        /// <param name="row">Координата системного курсора по Y</param>
+        private static void PrintGamingGrid(int col, int row)   //  Понимаю, что это упоротость, но захотелось поразмять мозги.
         {
             Console.SetCursorPosition(col, row);
-            String grid = "".PadRight(resolution * 4, '-') + "-\n";
+
+            string grid = "".PadRight(resolution * 4, '-') + "-\n";
 
             for (int i = 0; i < resolution; i += 1)
             {
                 grid += "|";
                 for (int j = 0; j < resolution; j += 1)
                 {
-                    grid += " U |";
+                    grid += "   |";
                 }
                 grid += "\n".PadRight(resolution * 4, '-') + "--\n"; ;
 
             }
-            /*String grid = "-------------" + "\n" +
-                            "| U | U | U |" + "\n" +
-                            "-------------" + "\n" +
-                            "| U | U | U |" + "\n" +
-                            "-------------" + "\n" +
-                            "| U | U | U |" + "\n" +
-                            "-------------" + "\n"; */
             Console.WriteLine(grid);
         }
+
+        private static void PrintState(int col, int row, List<int[][]> gameModel)
+        {
+            Console.SetCursorPosition(col, row);
+
+            for (int i = 0; i < resolution; i += 1)
+            {
+                int[][] line = gameModel[i];
+                for (int j = 0; j < resolution; j += 1)
+                {
+                    int x = line[j][0];
+                    int y = line[j][1];
+                    Console.Write(state[x, y]);
+                }
+                Console.WriteLine("\n");
+            }
+        }
+
+        private static void PrintGameInfo(int col, int row)
+        {
+            Console.SetCursorPosition(col, row);
+            Console.WriteLine("Для завершения нажмите ESC или Ctrl+C");
+        }
+
         private static void PrintGamerTurnStatus(int col, int row, string gameSymbol)
         {
             Console.SetCursorPosition(col, row);
             string gamer = gameSymbol == "X" ? "крестики" : "нолики";
-            Console.WriteLine($"Ходит игрок: {gameSymbol} ({gamer})          ");    //  пробелы в конце строки для затирания
+            Console.WriteLine($"Ходит игрок: {gameSymbol} ({gamer})          ");    //  Пробелы в конце строки для затирания.
         }
-        private static string[,] CreateGameState(int resolution, string initSymbol)
-        {
-            string[,] field = new string[resolution, resolution]; 
-            for (int i = 0; i < resolution; i += 1)
-            {
-                for (int j = 0; j < resolution; j += 1)
-                {
-                    field[i, j] = initSymbol;
-                }
-            }
-            return field;
-        }
-        private static int MoveXRight(int x, int resoluton) => x < resoluton - 1 ? (x + 1) : 0;
-        private static int MoveXLeft(int x, int resoluton) => x >= 1 ? (x - 1) : resoluton - 1;
-        private static int MoveYDown(int y, int resoluton) => y < resoluton - 1 ? (y + 1) : 0;
-        private static int MoveYUp(int y, int resoluton) => y >= 1 ? (y - 1) : resoluton - 1;
 
+        private static int MoveXRight(int x, int resoluton) => x < resoluton - 1 ? (x + 1) : 0;
+
+        private static int MoveXLeft(int x, int resoluton) => x >= 1 ? (x - 1) : resoluton - 1;
+
+        private static int MoveYDown(int y, int resoluton) => y < resoluton - 1 ? (y + 1) : 0;
+
+        private static int MoveYUp(int y, int resoluton) => y >= 1 ? (y - 1) : resoluton - 1;
+        #endregion
+        #endregion
     }
 }
