@@ -6,6 +6,21 @@ namespace Practice2
 	{
 		private string name;
 		private int age;
+		private double averageScore;
+		public double AverageScore 
+		{
+			get
+			{
+				return averageScore;
+			}
+			set
+			{
+				if (value >= 0 && value <= 5) 
+				{
+					averageScore = value;
+				}
+			}
+		}
 		public Student(string name, int age)
 		{
 			this.name = name;
