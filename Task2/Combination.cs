@@ -1,8 +1,12 @@
 ﻿using System;
 
-public class Combination
+namespace Task2
 {
-	public Combination()
-	{
-	}
+    public class Combination
+    {
+        public Combination()
+        {
+            Console.WriteLine("В конструкторе Combination");
+        }
+    }
 }

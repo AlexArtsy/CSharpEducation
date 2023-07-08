@@ -1,86 +1,112 @@
 ﻿using System;
 
-public class GameField
+namespace Task2
 {
-    private int resolution;
-	private Figure[][] rows;
-    private Figure[][] columns;
-    private Figure[] mainDiagonal;
-    private Figure[] sideDiagonal;
-    private Figure[,] field;
-    private List<Figure[]> model;
-
-    public GameField(int resolution)
-	{
-        this.resolution = resolution;
-        this.rows = new Figure[resolution][resolution];
-        this.columns = new Figure[resolution][resolution];
-        this.mainDiagonal = new Figure[resolution];
-        this.sideDiagonal = new Figure[resolution];
-        this.field = CreateField();
-        this.model = CreateFieldModel();
-    }
-
-    public List<Figure[]> GetModel()
+    public class GameField
     {
-        return this.model;
-    }
+        private int resolution;
+        private Figure[][] rows;
+        private Figure[][] columns;
+        private Figure[] mainDiagonal;
+        private Figure[] sideDiagonal;
+        private Figure[,] field;
+        private List<Figure[]> model;
 
-    public Figure[,] GetField()
-    {
-        return this.field;
-    }
-
-    private Figure[,] CreateField()
-    {
-        Figure[,] field = new Figure[resolution, resolution];
-
-        for (int y = 0; y < resolution; y += 1)
+        public GameField(int resolution)
         {
-            for (int x = 0; x < resolution; x += 1)
+            this.resolution = resolution;
+            this.rows = new Figure[resolution][resolution];
+            this.columns = new Figure[resolution][resolution];
+            this.mainDiagonal = new Figure[resolution];
+            this.sideDiagonal = new Figure[resolution];
+            this.field = CreateField();
+            this.model = CreateFieldModel();
+        }
+
+        public List<Figure[]> GetModel()
+        {
+            return this.model;
+        }
+
+        public Figure[,] GetField()
+        {
+            return this.field;
+        }
+
+        private Figure[,] CreateField()
+        {
+            Figure[,] field = new Figure[resolution, resolution];
+
+            for (int y = 0; y < resolution; y += 1)
             {
-                field[x, y] = new Figure(x, y, " ");
+                for (int x = 0; x < resolution; x += 1)
+                {
+                    field[x, y] = new Figure(x, y, " ");
+                }
             }
         }
-    }
 
-    private List<Figure[]> CreateFieldModel()
-    {
-        int fieldDimension = 2;
-        int amountOfDiagonal = 2;
-        var gameModel = new List<int[][]>(resolution * fieldDimension + amountOfDiagonal);
-
-        for (int y = 0; y < resolution; y += 1)
+        private List<Figure[]> CreateFieldModel()
         {
-            gameModel.Add(GetRow(y));
+            int fieldDimension = 2;
+            int amountOfDiagonal = 2;
+            var gameModel = new List<int[][]>(resolution * fieldDimension + amountOfDiagonal);
+
+            for (int y = 0; y < resolution; y += 1)
+            {
+                gameModel.Add(GetRow(y));
+            }
+            for (int x = 0; x < resolution; x += 1)
+            {
+                gameModel.Add(GetColumn(x));
+            }
+            gameModel.Add(GetMainDiagonal());
+            gameModel.Add(GetSaidDiagonal());
+
+            return gameModel;
         }
-        for (int x = 0; x < resolution; x += 1)
+
+        private Figure[] GetRow(int y)
         {
-            gameModel.Add(GetColumn(x));
+            var row = new Figure[resolution];
+            for (int x = 0; x < resolution; x += 1)
+            {
+                row[x] = field[x, y];
+            }
+            return row;
         }
-        gameModel.Add(GetMainDiagonal());
-        gameModel.Add(GetSaidDiagonal());
 
-        return gameModel;
-    }
+        private Figure[] GetColumn(int x)
+        {
+            var column = new Figure[resolution];
+            for (int y = 0; y < resolution; y += 1)
+            {
+                column[y] = field[x, y];
+            }
+            return column;
+        }
 
-    private Figure[] GetRow(int index)
-    {
+        private Figure[] GetMainDiagonal()
+        {
+            var diagonal = new Figure[resolution];
+            for (int i = 0; i < resolution; i += 1)
+            {
+                diagonal[i] = field[i, i];
+            }
+            return diagonal;
+        }
 
-    }
+        private Figure[] GetSaidDiagonal()
+        {
+            var diagonal = new Figure[resolution];
+            int y = resolution - 1;
 
-    private Figure[] GetColumn(int index)
-    {
-
-    }
-
-    private Figure[] GetMainDiagonal()
-    {
-
-    }
-
-    private Figure[] GetSaidDiagonal()
-    {
-
+            for (int i = 0; i < resolution; i += 1)
+            {
+                diagonal[i] = field[i, i];
+                y -= 1;
+            }
+            return diagonal;
+        }
     }
 }

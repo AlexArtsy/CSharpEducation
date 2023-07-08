@@ -10,6 +10,8 @@
         #region Controller
         static void Main(string[] args)
         {
+            new Combination();
+
             state = CreateGameState();  //  Инициализируем игровое поле начальными символами " ".
             List<int[][]> gameModel = CreateGameModel();
 
