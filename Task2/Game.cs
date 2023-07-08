@@ -1,4 +1,7 @@
-﻿
+﻿using System;
+
+namespace Task2
+{
     public class Game
     {
         #region Поля и свойства
@@ -10,7 +13,7 @@
         public Game(int resolution)
         {
             this.resolution = resolution;
-            this field = new GameField(resolution);
+            this.field = new GameField(resolution);
             this.state = CreateGameState();
         }
         #endregion
@@ -34,4 +37,5 @@
         }
         #endregion
     }
+}
 
