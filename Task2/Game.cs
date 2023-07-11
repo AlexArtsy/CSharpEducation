@@ -6,16 +6,19 @@ namespace Task2
     {
         #region Поля и свойства
         private int resolution;
-        private Figure[,] fieldState;
         private string gameState;
-        private GameField field;
+        private GameField gameField;
+        private List<Combination> model;
         private Player player1;
         private Player player2;
         private bool gamerToggle;
         private IO io;
-        private bool isGameEnded;
+        private Player winner;
 
         public int Resolution { get => resolution; }
+        public Figure[,] Field { get => gameField.GetField(); }
+        public string State { get => gameState; }
+
         #endregion
         #region Конструктор
         public Game(int resolution, Player player1, Player player2)
@@ -24,10 +27,9 @@ namespace Task2
             this.player1 = player1;
             this.player2 = player2;
             this.gamerToggle = true;
-            this.field = new GameField(resolution);
-            this.fieldState = field.GetField();
+            this.gameField = new GameField(resolution);
+            this.model = this.gameField.Model;
             this.io = new IO(resolution);
-            this.isGameEnded = false;
             this.gameState = "started";
         }
         #endregion
@@ -38,41 +40,34 @@ namespace Task2
 
             while (this.gameState == "running")
             {
-                this.io.Render(this.field, this.field.GetModel());
                 var player = SwitchPlayers();
-                var figure = SelectFieldCell(player);
+                var figure = player.SelectFieldCell(this);
                 ExecuteRound(player, figure);
                 this.gameState = CheckGameState(player);
             }
 
-            Console.WriteLine(this.gameState);
+            Console.WriteLine();
         }
 
         private Figure SelectFieldCell(Player player)
         {
             while (true)
             {
-                this.io.Render(this.field, this.field.GetModel());
-                ConsoleKey key = Console.ReadKey(true).Key;
+                this.io.Render(this, player);
 
+                ConsoleKey key = Console.ReadKey(true).Key; //  Слушаем нажатие кнопки.
                 switch (key)
                 {
                     case ConsoleKey.DownArrow:
-                        this.io.MoveCursor(key);
-                        break;
                     case ConsoleKey.UpArrow:
-                        this.io.MoveCursor(key);
-                        break;
                     case ConsoleKey.RightArrow:
-                        this.io.MoveCursor(key);
-                        break;
                     case ConsoleKey.LeftArrow:
                         this.io.MoveCursor(key);
                         break;
                     case ConsoleKey.Enter:
-                        if (this.fieldState[this.io.UserCursor.GetX(), this.io.UserCursor.GetY()].Value == " ")
+                        if (!this.Field[this.io.UserCursor.GetX(), this.io.UserCursor.GetY()].IsInizialized)
                         {
-                            return this.fieldState[this.io.UserCursor.GetX(), this.io.UserCursor.GetY()];
+                            return this.Field[this.io.UserCursor.GetX(), this.io.UserCursor.GetY()];
                         }
                         break;
                 }
@@ -81,29 +76,28 @@ namespace Task2
         private void ExecuteRound(Player player, Figure figure)
         {
             figure.Value = player.GameSymbol;
+            figure.IsInizialized = true;
         }
 
         private string CheckGameState(Player player)
         {
-            List<Combination> model = this.field.GetModel();
-
-            for(int i = 0; i < model.Count; i += 1)
+            for(int i = 0; i < this.model.Count; i += 1)
             {
-                if (model[0].IsWinning(player.GameSymbol))
+                if (this.model[i].IsStandoff())
                 {
-                    this.isGameEnded = true;
+                    this.io.ChangeLineColor(model[i].Line, ConsoleColor.Red);
+                    this.model.RemoveAt(i);
+                }
+                if (this.model[i].IsWinning(player.GameSymbol))
+                {
+                    this.io.ChangeLineColor(model[i].Line, ConsoleColor.Green);
                     player.IsPlayerWin = true;
                     return "completed";
                 }
-                if (model[0].IsStandoff())
-                {
-                    model.RemoveAt(i);
-                }
             }
 
-            if (model.Count == 0)
+            if (this.model.Count == 0)
             {
-                this.isGameEnded = true;
                 return "standoff";
             }
 

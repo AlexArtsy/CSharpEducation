@@ -8,20 +8,17 @@ namespace Task2
         #region Поля и свойства
         private int resolution;
         private Cursor userCursor;
-        private int row = 0;
-        private int col = 0;
-        private int xUserCoursorPos = 0;
-        private int yUserCoursorPos = 0;
 
         public Cursor UserCursor { get { return userCursor; } }
         #endregion
 
         #region Методы
-        public void Render(GameField field, List<Combination> model)
+        public void Render(Game game, Player player)
         {
-            PrintGrid(0, 0);
-            PrintGameField(2, 1, field);
-            PrintModel(0, 15, model);
+            PrintGameInfo(col: 0, row: 0);
+            PrintGamerTurnStatus(col: 0, row: Console.CursorTop + 1, player.GameSymbol);
+            PrintGamingField(col: 5, row: Console.CursorTop + 1, game.Field);
+            PrintGameStatus(col: 0, row: Console.CursorTop + 3, game.State);
         }
 
         public void MoveCursor(ConsoleKey key)
@@ -43,28 +40,49 @@ namespace Task2
             }
         }
 
+        private static void PrintGameInfo(int col, int row)
+        {
+            Console.SetCursorPosition(col, row);
+            Console.WriteLine("Для завершения нажмите ESC или Ctrl+C");
+        }
+
+        private static void PrintGamerTurnStatus(int col, int row, string gameSymbol)
+        {
+            Console.SetCursorPosition(col, row);
+            string gamer = gameSymbol == "X" ? "крестики" : "нолики";
+            Console.WriteLine($"Ходит игрок: {gameSymbol} ({gamer})          ");    //  Пробелы в конце строки для затирания.
+        }
+
+        private void PrintGamingField(int col, int row, Figure[,] field)
+        {
+            Console.SetCursorPosition(col, row);
+            PrintGrid(col, row);
+            PrintField(col + 2, row + 1, field);
+        }
         private void PrintGrid(int col, int row)
         {
             Console.SetCursorPosition(col, row);
 
-            string grid = "".PadRight(this.resolution * 4, '-') + "-\n";
+            Console.WriteLine("".PadRight(this.resolution * 4, '-') + "-");
 
             for (int y = 0; y < this.resolution; y += 1)
             {
-                grid += "|";
+                Console.SetCursorPosition(col, Console.CursorTop);
+                string line = "|";
                 for (int x = 0; x < this.resolution; x += 1)
                 {
-                    grid += "   |";
+                    line += "   |";
                 }
-                grid += "\n".PadRight(this.resolution * 4, '-') + "--\n";
+                Console.WriteLine(line);
+
+                Console.SetCursorPosition(col, Console.CursorTop);
+                Console.WriteLine("".PadRight(this.resolution * 4, '-') + "-");
             }
-            Console.WriteLine(grid);
         }
 
-        private void PrintGameField(int col, int row, GameField gameField)
+        private void PrintField(int col, int row, Figure[,] field)
         {
             Console.SetCursorPosition(col, row);
-            Figure[,] field = gameField.GetField();
             int xCursorPos;
             int yCursorPos = row;
 
@@ -77,6 +95,7 @@ namespace Task2
                 {
 
                     Console.SetCursorPosition(xCursorPos, yCursorPos);
+                    Console.BackgroundColor = field[x, y].BGColor;
 
                     if (x == userCursor.GetX() && y == userCursor.GetY())
                     {
@@ -92,20 +111,19 @@ namespace Task2
             }
         }
 
-        private void PrintModel(int col, int row, List<Combination> model)  /////////////////////////////////////////////////////
+        private void PrintGameStatus(int col, int row, string gameState)
         {
             Console.SetCursorPosition(col, row);
-
-            foreach(Combination line in model)
-            {
-                foreach(Figure fig in line.Line)
-                {
-                    Console.Write($"{fig.Value} ");
-                }
-                Console.WriteLine("\n");
-            }
+            Console.WriteLine(gameState);
         }
 
+        public void ChangeLineColor(Figure[] line, ConsoleColor color)
+        {
+            foreach (Figure fig in line)
+            {
+                fig.BGColor = color;
+            }
+        }
         #endregion
 
         #region Конструктор

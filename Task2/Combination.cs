@@ -8,6 +8,8 @@ namespace Task2
 
         public Figure[] Line { get { return line; } }
 
+        
+
         public Combination(Figure[] line)
         {
             this.line = line;

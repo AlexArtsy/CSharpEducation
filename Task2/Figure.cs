@@ -5,8 +5,22 @@ public class Figure
 	private int x;
 	private int y;
 	private string value;
+    private ConsoleColor bgColor;
+    private bool isInizialized;
 
-	public int X 
+    public ConsoleColor BGColor
+    {
+        get { return bgColor; }
+        set { bgColor = value; }
+    }
+
+    public bool IsInizialized
+    {
+        get { return isInizialized; }
+        set { isInizialized = value; }
+    }
+
+    public int X 
 	{
 		get { return x; }
 		set {this.x = value; }
@@ -29,5 +43,7 @@ public class Figure
         this.x = x;
         this.y = y;
 		this.value = value;
+        this.bgColor = ConsoleColor.Black;
+        this.isInizialized = false;
     }
 }

@@ -12,6 +12,8 @@ namespace Task2
         private Figure[,] field;
         private List<Combination> model;
 
+        public List<Combination> Model { get { return model; } }
+
         public GameField(int resolution)
         {
             this.resolution = resolution;
@@ -21,11 +23,6 @@ namespace Task2
             this.sideDiagonal = new Figure[resolution];
             this.field = CreateField();
             this.model = CreateFieldModel();
-        }
-
-        public List<Combination> GetModel()
-        {
-            return this.model;
         }
 
         public Figure[,] GetField()
