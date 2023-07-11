@@ -25,27 +25,27 @@ namespace Task2
 
         public void SetY(int y)
         {
-            this.x = y;
+            this.y = y;
         }
 
         public void MoveXRight()
         {
-            this.SetX(this.GetX() < resoluton - 1 ? (this.GetX() + 1) : 0);
+            this.SetX(this.GetX() < this.resolution - 1 ? (this.GetX() + 1) : 0);
         }
 
         public void MoveXLeft()
         {
-            this.SetX(this.GetX() >= 1 ? (this.GetX() - 1) : resoluton - 1);
+            this.SetX(this.GetX() >= 1 ? (this.GetX() - 1) : this.resolution - 1);
         }
 
         public void MoveYDown()
         {
-            this.SetY(this.GetY() < resoluton - 1 ? (this.GetY() + 1) : 0);
+            this.SetY(this.GetY() < this.resolution - 1 ? (this.GetY() + 1) : 0);
         }
 
         public void MoveYUp()
         {
-            this.SetY(this.GetY() >= 1 ? (this.GetY() - 1) : resoluton - 1);
+            this.SetY(this.GetY() >= 1 ? (this.GetY() - 1) : this.resolution - 1);
         }
     }
 }

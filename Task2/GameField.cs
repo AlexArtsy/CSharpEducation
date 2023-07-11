@@ -10,20 +10,20 @@ namespace Task2
         private Figure[] mainDiagonal;
         private Figure[] sideDiagonal;
         private Figure[,] field;
-        private List<Figure[]> model;
+        private List<Combination> model;
 
         public GameField(int resolution)
         {
             this.resolution = resolution;
-            this.rows = new Figure[resolution][resolution];
-            this.columns = new Figure[resolution][resolution];
+            this.rows = new Figure[resolution][];
+            this.columns = new Figure[resolution][];
             this.mainDiagonal = new Figure[resolution];
             this.sideDiagonal = new Figure[resolution];
             this.field = CreateField();
             this.model = CreateFieldModel();
         }
 
-        public List<Figure[]> GetModel()
+        public List<Combination> GetModel()
         {
             return this.model;
         }
@@ -44,13 +44,14 @@ namespace Task2
                     field[x, y] = new Figure(x, y, " ");
                 }
             }
+            return field;
         }
 
-        private List<Figure[]> CreateFieldModel()
+        private List<Combination> CreateFieldModel()
         {
             int fieldDimension = 2;
             int amountOfDiagonal = 2;
-            var gameModel = new List<int[][]>(resolution * fieldDimension + amountOfDiagonal);
+            var gameModel = new List<Combination>(resolution * fieldDimension + amountOfDiagonal);
 
             for (int y = 0; y < resolution; y += 1)
             {
@@ -66,37 +67,37 @@ namespace Task2
             return gameModel;
         }
 
-        private Figure[] GetRow(int y)
+        private Combination GetRow(int y)
         {
             var row = new Figure[resolution];
             for (int x = 0; x < resolution; x += 1)
             {
                 row[x] = field[x, y];
             }
-            return row;
+            return new Combination(row);
         }
 
-        private Figure[] GetColumn(int x)
+        private Combination GetColumn(int x)
         {
             var column = new Figure[resolution];
             for (int y = 0; y < resolution; y += 1)
             {
                 column[y] = field[x, y];
             }
-            return column;
+            return new Combination(column);
         }
 
-        private Figure[] GetMainDiagonal()
+        private Combination GetMainDiagonal()
         {
             var diagonal = new Figure[resolution];
             for (int i = 0; i < resolution; i += 1)
             {
                 diagonal[i] = field[i, i];
             }
-            return diagonal;
+            return new Combination(diagonal);
         }
 
-        private Figure[] GetSaidDiagonal()
+        private Combination GetSaidDiagonal()
         {
             var diagonal = new Figure[resolution];
             int y = resolution - 1;
@@ -106,7 +107,7 @@ namespace Task2
                 diagonal[i] = field[i, i];
                 y -= 1;
             }
-            return diagonal;
+            return new Combination(diagonal);
         }
     }
 }

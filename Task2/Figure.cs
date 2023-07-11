@@ -6,20 +6,23 @@ public class Figure
 	private int y;
 	private string value;
 
-	public int getX()
+	public int X 
 	{
-		return x;
+		get { return x; }
+		set {this.x = value; }
 	}
 
-	public int getY()
-	{
-		return y;
-	}
+    public int Y
+    {
+        get { return y; }
+        set { this.y = value; }
+    }
 
-	public string getValue()
-	{
-		return value;
-	}
+    public string Value
+    {
+        get { return value; }
+        set { this.value = value; }
+    }
 
     public Figure(int x, int y, string value)
     {
