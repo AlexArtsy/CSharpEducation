@@ -35,11 +35,7 @@ namespace Task2
         {
             while (true)
             {
-<<<<<<< Updated upstream
-                game.io.Render(game, player);
-=======
                 game.io.Render(game, this);
->>>>>>> Stashed changes
 
                 ConsoleKey key = Console.ReadKey(true).Key; //  Слушаем нажатие кнопки.
                 switch (key)
