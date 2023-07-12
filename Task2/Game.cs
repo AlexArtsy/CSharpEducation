@@ -12,7 +12,7 @@ namespace Task2
         private Player player1;
         private Player player2;
         private bool gamerToggle;
-        public IO io;
+        private IO io;
 
         private Player winner;
 
