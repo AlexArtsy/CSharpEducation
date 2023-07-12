@@ -5,7 +5,7 @@ namespace Task2
     {
         private int x;
         private int y;
-        private int resolution;
+        private readonly int resolution;
 
         public Cursor(int resolution)
         {

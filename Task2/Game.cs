@@ -9,12 +9,12 @@ namespace Task2
         private string gameState;
         private GameField gameField;
         private List<Combination> model;
-        private Player player1;
-        private Player player2;
+        private Human player1;
+        private Human player2;
         private bool gamerToggle;
-        private IO io;
+        private RenderProcessor rendering;
 
-        private Player winner;
+        private Human winner;
 
         public int Resolution { get => resolution; }
         public Figure[,] Field { get => gameField.GetField(); }
@@ -22,7 +22,7 @@ namespace Task2
 
         #endregion
         #region Конструктор
-        public Game(int resolution, Player player1, Player player2)
+        public Game(int resolution, Human player1, Human player2)
         {
             this.resolution = resolution;
             this.player1 = player1;
@@ -30,7 +30,7 @@ namespace Task2
             this.gamerToggle = true;
             this.gameField = new GameField(resolution);
             this.model = this.gameField.Model;
-            this.io = new IO(resolution);
+            this.rendering = new RenderProcessor(resolution);
             this.gameState = "started";
         }
         #endregion
@@ -42,7 +42,7 @@ namespace Task2
             while (this.gameState == "running")
             {
                 var player = SwitchPlayers();
-                var figure = player.SelectFieldCell(this);
+                var figure = SelectFieldCell(player);
                 ExecuteRound(player, figure);
                 this.gameState = CheckGameState(player);
             }
@@ -50,37 +50,25 @@ namespace Task2
             Console.WriteLine();
         }
 
-        private Figure SelectFieldCell(Player player)
+        private Figure SelectFieldCell(Human player)
         {
+            bool validation = false;
             while (true)
             {
-                this.io.Render(this, player);
-
-                ConsoleKey key = Console.ReadKey(true).Key; //  Слушаем нажатие кнопки.
-                switch (key)
+                this.rendering.Render(this, player);
+                if (validation)
                 {
-                    case ConsoleKey.DownArrow:
-                    case ConsoleKey.UpArrow:
-                    case ConsoleKey.RightArrow:
-                    case ConsoleKey.LeftArrow:
-                        this.io.MoveCursor(key);
-                        break;
-                    case ConsoleKey.Enter:
-                        if (!this.Field[this.io.UserCursor.GetX(), this.io.UserCursor.GetY()].IsInizialized)
-                        {
-                            return this.Field[this.io.UserCursor.GetX(), this.io.UserCursor.GetY()];
-                        }
-                        break;
+                    return player.SelectFieldCell(this.Field, out validation);
                 }
             }
         }
-        private void ExecuteRound(Player player, Figure figure)
+        private void ExecuteRound(Human player, Figure figure)
         {
             figure.Value = player.GameSymbol;
             figure.IsInizialized = true;
         }
 
-        private string CheckGameState(Player player)
+        private string CheckGameState(Human player)
         {
             for(int i = 0; i < this.model.Count; i += 1)
             {
@@ -105,9 +93,9 @@ namespace Task2
             return "running";
         }
 
-        private Player SwitchPlayers()
+        private Human SwitchPlayers()
         {
-            Player currentPlayer;
+            Human currentPlayer;
             if (this.gamerToggle)
             {
                 currentPlayer = this.player1;
