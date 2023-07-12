@@ -1,7 +1,11 @@
+<<<<<<< Updated upstream
 ﻿using System;
 using System.IO;
 
 namespace Task2
+=======
+﻿namespace Task2
+>>>>>>> Stashed changes
 {
     public class IO
     {
@@ -9,7 +13,14 @@ namespace Task2
         private int resolution;
         private Cursor userCursor;
 
+<<<<<<< Updated upstream
         public Cursor UserCursor { get { return userCursor; } }
+=======
+        public Cursor UserCursor
+        {
+            get { return userCursor; }
+        }
+>>>>>>> Stashed changes
         #endregion
 
         #region Методы

@@ -12,7 +12,11 @@ namespace Task2
         private Player player1;
         private Player player2;
         private bool gamerToggle;
+<<<<<<< Updated upstream
         private IO io;
+=======
+        public IO io;
+>>>>>>> Stashed changes
         private Player winner;
 
         public int Resolution { get => resolution; }
