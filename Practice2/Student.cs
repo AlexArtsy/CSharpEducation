@@ -2,7 +2,7 @@ using System;
 
 namespace Practice2
 {
-	internal class Student
+	public class Student
 	{
 		private string name;
 		private int age;

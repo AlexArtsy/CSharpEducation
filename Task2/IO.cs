@@ -1,7 +1,6 @@
 namespace Task2
-
 {
-    public class IO
+    internal class IO
     {
         #region Поля и свойства
         private int resolution;
