@@ -10,65 +10,71 @@
         #region Controller
         static void Main(string[] args)
         {
-            state = CreateGameState();  //  Инициализируем игровое поле начальными символами " ".
-            List<int[][]> gameModel = CreateGameModel();
+            var player1 = new Player("X");
+            var player2 = new Player("O");
+            var game = new Game(resolution, player1, player2);
+            game.Start();
 
-            int x = 0;
-            int y = 0;
-            bool gamerSwitch = true;    //  Переключатель для смены игрока.
-            string gameSymbol = "X";    //  Определяем кто из игроков ходит первым.
+            Console.ReadKey();
+            //state = CreateGameState();  //  Инициализируем игровое поле начальными символами " ".
+            //List<int[][]> gameModel = CreateGameModel();
 
-            int row = 0;
-            int col = 0;
-            PrintGameInfo(col, row);
-            PrintGamingGrid(col, row + 4);  //  Рисуем игровую сетку с 4 строки.
+            //int x = 0;
+            //int y = 0;
+            //bool gamerSwitch = true;    //  Переключатель для смены игрока.
+            //string gameSymbol = "X";    //  Определяем кто из игроков ходит первым.
 
-            while (true)    //  Event loop.
-            {
-                PrintGamerTurnStatus(col: 0, row: 3, gameSymbol);   //  Рисуем очередь игрока с 3-й строки.
+            //int row = 0;
+            //int col = 0;
+            //PrintGameInfo(col, row);
+            //PrintGamingGrid(col, row + 4);  //  Рисуем игровую сетку с 4 строки.
 
-                col = Console.CursorLeft + 2;   //  Определяем где находится курсор после отрисовки игрового поля и сдвигаем координату в центр ячейки
-                row = Console.CursorTop + 1;    //  Определяем где находится курсор после отрисовки игрового поля и сдвигаем на 1 строчки вниз.
-                RenderGamingField(col, row, xRoundCoordinate: x, yRoundCoordinate: y);
+            //while (true)    //  Event loop.
+            //{
+            //    PrintGamerTurnStatus(col: 0, row: 3, gameSymbol);   //  Рисуем очередь игрока с 3-й строки.
 
-                col = Console.CursorLeft;
-                row = Console.CursorTop + 3;
-                Console.SetCursorPosition(0, row);
-                Console.Write($"x: {x} y: {y}");
+            //    col = Console.CursorLeft + 2;   //  Определяем где находится курсор после отрисовки игрового поля и сдвигаем координату в центр ячейки
+            //    row = Console.CursorTop + 1;    //  Определяем где находится курсор после отрисовки игрового поля и сдвигаем на 1 строчки вниз.
+            //    RenderGamingField(col, row, xRoundCoordinate: x, yRoundCoordinate: y);
 
-                col = 0;
-                row = Console.CursorTop + 3;
-                ClearField(col, row);
-                PrintState(col, row, gameModel);
+            //    col = Console.CursorLeft;
+            //    row = Console.CursorTop + 3;
+            //    Console.SetCursorPosition(0, row);
+            //    Console.Write($"x: {x} y: {y}");
 
-                switch (Console.ReadKey(true).Key)  //  Слушаем нажатие кнопок.
-                {
-                    case ConsoleKey.Escape:
-                        return;
-                    case ConsoleKey.DownArrow:
+            //    col = 0;
+            //    row = Console.CursorTop + 3;
+            //    ClearField(col, row);
+            //    PrintState(col, row, gameModel);
+
+            //    switch (Console.ReadKey(true).Key)  //  Слушаем нажатие кнопок.
+            //    {
+            //        case ConsoleKey.Escape:
+            //            return;
+            //        case ConsoleKey.DownArrow:
                         
-                        y = MoveYDown(y, resolution);
-                        break;
-                    case ConsoleKey.UpArrow:
-                        y = MoveYUp(y, resolution);
-                        break;
-                    case ConsoleKey.RightArrow:
-                        x = MoveXRight(x, resolution);
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        x = MoveXLeft(x, resolution);
-                        break;
-                    case ConsoleKey.Enter:
-                        if (state[y, x] == " ")  //  Проверяем, сделан ли ход в выбранной ячейке.
-                        {
-                            state[y, x] = gameSymbol;
-                            gameSymbol = gamerSwitch ? "O" : "X";
-                            gamerSwitch = !gamerSwitch;
-                            gameModel = CheckGameModelState(gameModel);
-                        }
-                        break;
-                }
-            }
+            //            y = MoveYDown(y, resolution);
+            //            break;
+            //        case ConsoleKey.UpArrow:
+            //            y = MoveYUp(y, resolution);
+            //            break;
+            //        case ConsoleKey.RightArrow:
+            //            x = MoveXRight(x, resolution);
+            //            break;
+            //        case ConsoleKey.LeftArrow:
+            //            x = MoveXLeft(x, resolution);
+            //            break;
+            //        case ConsoleKey.Enter:
+            //            if (state[y, x] == " ")  //  Проверяем, сделан ли ход в выбранной ячейке.
+            //            {
+            //                state[y, x] = gameSymbol;
+            //                gameSymbol = gamerSwitch ? "O" : "X";
+            //                gamerSwitch = !gamerSwitch;
+            //                gameModel = CheckGameModelState(gameModel);
+            //            }
+            //            break;
+            //    }
+            //}
         }
         #endregion
         #region Model
