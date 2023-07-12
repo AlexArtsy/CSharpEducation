@@ -35,7 +35,7 @@ namespace Task2
         {
             while (true)
             {
-                game.io.Render(game, player);
+                game.io.Render(game, this);
 
                 ConsoleKey key = Console.ReadKey(true).Key; //  Слушаем нажатие кнопки.
                 switch (key)
