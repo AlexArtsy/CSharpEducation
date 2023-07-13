@@ -1,41 +1,19 @@
 namespace Task2
 {
-    internal class IO
+    internal class RenderProcessor
     {
         #region Поля и свойства
         private int resolution;
-        private Cursor userCursor;
-
-        public Cursor UserCursor { get { return userCursor; } }
 
         #endregion
 
         #region Методы
-        public void Render(Game game, Player player)
+        public void Render(Game game, Human player)
         {
             PrintGameInfo(col: 0, row: 0);
             PrintGamerTurnStatus(col: 0, row: Console.CursorTop + 1, player.GameSymbol);
             PrintGamingField(col: 5, row: Console.CursorTop + 1, game.Field);
             PrintGameStatus(col: 0, row: Console.CursorTop + 3, game.State);
-        }
-
-        public void MoveCursor(ConsoleKey key)
-        {
-            switch (key)
-            {
-                case ConsoleKey.DownArrow:
-                    userCursor.MoveYDown();
-                    break;
-                case ConsoleKey.UpArrow:
-                    userCursor.MoveYUp();
-                    break;
-                case ConsoleKey.RightArrow:
-                    userCursor.MoveXRight();
-                    break;
-                case ConsoleKey.LeftArrow:
-                    userCursor.MoveXLeft();
-                    break;
-            }
         }
 
         private static void PrintGameInfo(int col, int row)
@@ -51,7 +29,7 @@ namespace Task2
             Console.WriteLine($"Ходит игрок: {gameSymbol} ({gamer})          ");    //  Пробелы в конце строки для затирания.
         }
 
-        private void PrintGamingField(int col, int row, Figure[,] field)
+        public void PrintGamingField(int col, int row, Figure[,] field)
         {
             Console.SetCursorPosition(col, row);
             PrintGrid(col, row);
@@ -82,7 +60,7 @@ namespace Task2
         {
             Console.SetCursorPosition(col, row);
             int xCursorPos;
-            int yCursorPos = row;
+            var yCursorPos = row;
 
             for (int y = 0; y < resolution; y += 1)
             {
@@ -125,10 +103,9 @@ namespace Task2
         #endregion
 
         #region Конструктор
-        public IO(int resolution)
+        public RenderProcessor(int resolution)
         {
             this.resolution = resolution;
-            this.userCursor = new Cursor(resolution);
         }
         #endregion
     }

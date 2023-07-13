@@ -2,58 +2,40 @@
 
 namespace Task2
 {
-    public class Player
+    public class Human
     {
-        private string gameSymbol;
-        private bool isPlayerWin;
-        private bool isPlayerRound = false;
+        private KeyBoardControl input;
+        public bool IsPlayerWin { get; set; }
 
-        public bool IsPlayerRound
+        public string GameSymbol { get; }
+
+        public Human(int resolution, string gameSymbol)
         {
-            get { return isPlayerRound; }
-            set { isPlayerRound = value; }
+            this.input = new KeyBoardControl(resolution);
+            this.GameSymbol= gameSymbol;
+            this.IsPlayerWin = false;
         }
 
-        public bool IsPlayerWin 
+        public Figure SelectFieldCell(Figure[,] field, out bool validation)
         {
-            get { return isPlayerWin; }
-            set { isPlayerWin = value; }
-        }
+            ConsoleKey key = Console.ReadKey(true).Key;
+            validation = false;
 
-        public string GameSymbol
-        {
-            get { return  gameSymbol; }
-        }
-
-        public Player(string gameSymbol)
-        {
-            this.gameSymbol = gameSymbol;
-            this.isPlayerWin = false;
-        }
-
-        public Figure SelectFieldCell(Game game)
-        {
-            while (true)
+            switch (key)
             {
-                game.io.Render(game, this);
-
-                ConsoleKey key = Console.ReadKey(true).Key; //  Слушаем нажатие кнопки.
-                switch (key)
-                {
-                    case ConsoleKey.DownArrow:
-                    case ConsoleKey.UpArrow:
-                    case ConsoleKey.RightArrow:
-                    case ConsoleKey.LeftArrow:
-                        game.io.MoveCursor(key);
-                        break;
-                    case ConsoleKey.Enter:
-                        if (!game.Field[game.io.UserCursor.GetX(), game.io.UserCursor.GetY()].IsInizialized)
-                        {
-                            return game.Field[game.io.UserCursor.GetX(), game.io.UserCursor.GetY()];
-                        }
-                        break;
-                }
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.RightArrow:
+                case ConsoleKey.LeftArrow:
+                    input.MoveCursor(key);
+                    break;
+                case ConsoleKey.Enter:
+                    validation = true;
+                    break;
             }
+
+            return field[this.input.UserCursor.GetX(), this.input.UserCursor.GetY()];
+
         }
     }
 }
