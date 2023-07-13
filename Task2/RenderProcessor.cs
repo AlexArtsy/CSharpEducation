@@ -8,11 +8,11 @@ namespace Task2
         #endregion
 
         #region Методы
-        public void Render(Game game, Human player)
+        public void Render(Game game, ITicTacToePlaying player)
         {
             PrintGameInfo(col: 0, row: 0);
             PrintGamerTurnStatus(col: 0, row: Console.CursorTop + 1, player.GameSymbol);
-            PrintGamingField(col: 5, row: Console.CursorTop + 1, game.Field);
+            PrintGamingField(col: 5, row: Console.CursorTop + 1, game.Field, player.Input);
             PrintGameStatus(col: 0, row: Console.CursorTop + 3, game.State);
         }
 
@@ -25,15 +25,15 @@ namespace Task2
         private static void PrintGamerTurnStatus(int col, int row, string gameSymbol)
         {
             Console.SetCursorPosition(col, row);
-            string gamer = gameSymbol == "X" ? "крестики" : "нолики";
+            var gamer = gameSymbol == "X" ? "крестики" : "нолики";
             Console.WriteLine($"Ходит игрок: {gameSymbol} ({gamer})          ");    //  Пробелы в конце строки для затирания.
         }
 
-        public void PrintGamingField(int col, int row, Figure[,] field)
+        public void PrintGamingField(int col, int row, Figure[,] field, KeyBoardControl input)
         {
             Console.SetCursorPosition(col, row);
             PrintGrid(col, row);
-            PrintField(col + 2, row + 1, field);
+            PrintField(col + 2, row + 1, field, input);
         }
         private void PrintGrid(int col, int row)
         {
@@ -41,11 +41,11 @@ namespace Task2
 
             Console.WriteLine("".PadRight(this.resolution * 4, '-') + "-");
 
-            for (int y = 0; y < this.resolution; y += 1)
+            for (var y = 0; y < this.resolution; y += 1)
             {
                 Console.SetCursorPosition(col, Console.CursorTop);
                 string line = "|";
-                for (int x = 0; x < this.resolution; x += 1)
+                for (var x = 0; x < this.resolution; x += 1)
                 {
                     line += "   |";
                 }
@@ -56,24 +56,23 @@ namespace Task2
             }
         }
 
-        private void PrintField(int col, int row, Figure[,] field)
+        private void PrintField(int col, int row, Figure[,] field, KeyBoardControl input)
         {
             Console.SetCursorPosition(col, row);
-            int xCursorPos;
+
             var yCursorPos = row;
 
-            for (int y = 0; y < resolution; y += 1)
+            for (var y = 0; y < resolution; y += 1)
             {
-                xCursorPos = col;
+                var xCursorPos = col;
                 Console.SetCursorPosition(xCursorPos, yCursorPos);
 
-                for (int x = 0; x < resolution; x += 1)
+                for (var x = 0; x < resolution; x += 1)
                 {
-
                     Console.SetCursorPosition(xCursorPos, yCursorPos);
-                    Console.BackgroundColor = field[x, y].BGColor;
+                    Console.BackgroundColor = field[x, y].BackgroundColor;
 
-                    if (x == userCursor.GetX() && y == userCursor.GetY())
+                    if (x == input.UserCursor.GetX() && y == input.UserCursor.GetY())
                     {
                         Console.BackgroundColor = Console.ForegroundColor;
                         Console.ForegroundColor = ConsoleColor.Black;
@@ -97,7 +96,7 @@ namespace Task2
         {
             foreach (Figure fig in line)
             {
-                fig.BGColor = color;
+                fig.BackgroundColor = color;
             }
         }
         #endregion

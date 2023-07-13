@@ -1,49 +1,26 @@
-﻿using System;
-
-public class Figure
+﻿namespace Task2
 {
-	private int x;
-	private int y;
-	private string value;
-    private ConsoleColor bgColor;
-    private bool isInizialized;
-
-    public ConsoleColor BGColor
+    public class Figure
     {
-        get { return bgColor; }
-        set { bgColor = value; }
-    }
+        public ConsoleColor Color { get; set; }
+        public ConsoleColor BackgroundColor { get; set; }
 
-    public bool IsInizialized
-    {
-        get { return isInizialized; }
-        set { isInizialized = value; }
-    }
+        public bool Initialized { get; set; }
 
-    public int X 
-	{
-		get { return x; }
-		set {this.x = value; }
-	}
+        public int X { get; set; }
 
-    public int Y
-    {
-        get { return y; }
-        set { this.y = value; }
-    }
+        public int Y { get; set; }
 
-    public string Value
-    {
-        get { return value; }
-        set { this.value = value; }
-    }
+        public string Value { get; set; }
 
-    public Figure(int x, int y, string value)
-    {
-        this.x = x;
-        this.y = y;
-		this.value = value;
-        this.bgColor = ConsoleColor.Black;
-        this.isInizialized = false;
+        public Figure(int x, int y, string value)
+        {
+            X = x;
+            Y = y;
+            Value = value;
+            Color = ConsoleColor.White;
+            BackgroundColor = ConsoleColor.Black;
+            Initialized = false;
+        }
     }
 }

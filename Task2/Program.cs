@@ -9,8 +9,9 @@
         #region Методы
         static void Main(string[] args)
         {
-            var player1 = new Human(resolution,"X");
-            var player2 = new Human(resolution,"O");
+            var control = new KeyBoardControl(resolution);
+            var player1 = new Human("X", control);
+            var player2 = new NeuralNetwork("O", control);
             var game = new Game(resolution, player1, player2);
             game.Start();
 

@@ -1,22 +1,22 @@
 ﻿namespace Task2
 {
-    public class Human : ITicTacToePlaying
+    internal class NeuralNetwork : ITicTacToePlaying
     {
         public KeyBoardControl Input { get; set; }
         public bool IsPlayerWin { get; set; }
 
         public string GameSymbol { get; }
 
-        public Human(string gameSymbol, KeyBoardControl input)
+        public NeuralNetwork(string gameSymbol, KeyBoardControl input)
         {
-            Input = input;
-            GameSymbol= gameSymbol;
+            Input = input; 
+            GameSymbol = gameSymbol;
             IsPlayerWin = false;
         }
 
         public Figure SelectFieldCell(Figure[,] field, out bool validation)
         {
-            var key = Console.ReadKey(true).Key;
+            ConsoleKey key = Console.ReadKey(true).Key;
             validation = false;
 
             switch (key)
@@ -28,7 +28,7 @@
                     Input.MoveCursor(key);
                     break;
                 case ConsoleKey.Enter:
-                    validation = !field[Input.UserCursor.GetX(), Input.UserCursor.GetY()].Initialized;
+                    validation = validation = !field[Input.UserCursor.GetX(), Input.UserCursor.GetY()].Initialized;
                     break;
             }
 
