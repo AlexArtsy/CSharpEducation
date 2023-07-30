@@ -42,6 +42,7 @@ namespace Task2
                 var figure = SelectFieldCell(player);
                 ExecuteRound(player, figure);
                 State = CheckGameState(player);
+                rendering.Render(this, player);
             }
             Console.WriteLine();
         }

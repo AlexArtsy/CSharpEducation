@@ -13,13 +13,13 @@ namespace Task2
             PrintGameInfo(col: 0, row: 0);
             PrintGamerTurnStatus(col: 0, row: Console.CursorTop + 1, player.GameSymbol);
             PrintGamingField(col: 5, row: Console.CursorTop + 1, game.Field, player.Input);
-            PrintGameStatus(col: 0, row: Console.CursorTop + 3, game.State);
+            PrintGameStatus(col: 0, row: Console.CursorTop + 3, game.State, player);
         }
 
         private static void PrintGameInfo(int col, int row)
         {
             Console.SetCursorPosition(col, row);
-            Console.WriteLine("Для завершения нажмите ESC или Ctrl+C");
+            Console.WriteLine("Для завершения нажмите Ctrl+C");
         }
 
         private static void PrintGamerTurnStatus(int col, int row, string gameSymbol)
@@ -86,10 +86,22 @@ namespace Task2
             }
         }
 
-        private void PrintGameStatus(int col, int row, string gameState)
+        private void PrintGameStatus(int col, int row, string gameState, ITicTacToePlaying player)
         {
             Console.SetCursorPosition(col, row);
-            Console.WriteLine(gameState);
+            var text = "Статус игры:";
+            switch(gameState)
+            {
+                case "running":
+                    Console.WriteLine($"{text} игра продолжается");
+                    break;
+                case "standoff":
+                    Console.WriteLine($"{text} ничья!                 ");
+                     break;
+                case "completed":
+                    Console.WriteLine($"{text} игра завершена, победил игрок: {player.GameSymbol}");
+                    break;
+            }
         }
 
         public void ChangeLineColor(Figure[] line, ConsoleColor color)
