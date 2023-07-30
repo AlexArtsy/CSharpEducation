@@ -2,18 +2,14 @@
 {
     public class Human : ITicTacToePlaying
     {
+        #region Поля и свойства
         public KeyBoardControl Input { get; set; }
         public bool IsPlayerWin { get; set; }
 
         public string GameSymbol { get; }
+        #endregion
 
-        public Human(string gameSymbol, KeyBoardControl input)
-        {
-            Input = input;
-            GameSymbol= gameSymbol;
-            IsPlayerWin = false;
-        }
-
+        #region Методы
         public Figure SelectFieldCell(Figure[,] field, out bool validation)
         {
             var key = Console.ReadKey(true).Key;
@@ -33,7 +29,16 @@
             }
 
             return field[Input.UserCursor.GetX(), Input.UserCursor.GetY()];
-
         }
+        #endregion
+
+        #region Конструкторы
+        public Human(string gameSymbol, KeyBoardControl input)
+        {
+            Input = input;
+            GameSymbol = gameSymbol;
+            IsPlayerWin = false;
+        }
+        #endregion
     }
 }

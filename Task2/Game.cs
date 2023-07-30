@@ -19,18 +19,7 @@ namespace Task2
         public string State { get; set; }
 
         #endregion
-        #region Конструктор
-        public Game(int resolution, ITicTacToePlaying player1, ITicTacToePlaying player2)
-        {
-            this.player1 = player1;
-            this.player2 = player2;
-            gamerToggle = false;
-            gameField = new GameField(resolution);
-            model = gameField.Model;
-            rendering = new RenderProcessor(resolution);
-            State = "started";
-        }
-        #endregion
+        
         #region Методы
         public void Start()
         {
@@ -97,6 +86,19 @@ namespace Task2
         {
             gamerToggle = !gamerToggle;
             return gamerToggle ? player1 : player2;
+        }
+        #endregion
+
+        #region Конструкторы
+        public Game(int resolution, ITicTacToePlaying player1, ITicTacToePlaying player2)
+        {
+            this.player1 = player1;
+            this.player2 = player2;
+            gamerToggle = false;
+            gameField = new GameField(resolution);
+            model = gameField.Model;
+            rendering = new RenderProcessor(resolution);
+            State = "started";
         }
         #endregion
     }

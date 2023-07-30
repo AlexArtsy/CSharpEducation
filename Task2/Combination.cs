@@ -4,17 +4,12 @@ namespace Task2
 {
     public class Combination
     {
+        #region Поля и свойства
         private Figure[] line;
-
         public Figure[] Line { get { return line; } }
+        #endregion
 
-        
-
-        public Combination(Figure[] line)
-        {
-            this.line = line;
-        }
-
+        #region Методы
         public bool IsWinning(string symbol)
         {
             foreach (Figure fig in this.line)
@@ -41,5 +36,13 @@ namespace Task2
             }
             return hasSymbol1 && hasSymbol2;
         }
+        #endregion
+
+        #region Конструкторы
+        public Combination(Figure[] line)
+        {
+            this.line = line;
+        }
+        #endregion
     }
 }

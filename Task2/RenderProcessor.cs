@@ -113,7 +113,7 @@ namespace Task2
         }
         #endregion
 
-        #region Конструктор
+        #region Конструкторы
         public RenderProcessor(int resolution)
         {
             this.resolution = resolution;

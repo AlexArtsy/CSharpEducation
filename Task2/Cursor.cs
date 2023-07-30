@@ -3,17 +3,13 @@ namespace Task2
 {
     public class Cursor
     {
+        #region Поля и свойства
         private int x;
         private int y;
         private readonly int resolution;
+        #endregion
 
-        public Cursor(int resolution)
-        {
-            this.x = 0;
-            this.y = 0;
-            this.resolution = resolution;
-        }
-
+        #region Методы
         public int GetX() => this.x;
 
         public int GetY() => this.y;
@@ -47,5 +43,15 @@ namespace Task2
         {
             this.SetY(this.GetY() >= 1 ? (this.GetY() - 1) : this.resolution - 1);
         }
+        #endregion
+
+        #region Конструкторы
+        public Cursor(int resolution)
+        {
+            this.x = 0;
+            this.y = 0;
+            this.resolution = resolution;
+        }
+        #endregion
     }
 }

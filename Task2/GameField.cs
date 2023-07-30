@@ -1,20 +1,14 @@
-﻿using System;
-
-namespace Task2
+﻿namespace Task2
 {
     public class GameField
     {
+        #region Поля и свойства
         private readonly int resolution;
         public List<Combination> Model { get; set; }
         public Figure[,] Field { get; }
+        #endregion
 
-        public GameField(int resolution)
-        {
-            this.resolution = resolution;
-            Field = CreateField();
-            Model = CreateFieldModel();
-        }
-
+        #region Методы
         private Figure[,] CreateField()
         {
             var newField = new Figure[resolution, resolution];
@@ -91,5 +85,15 @@ namespace Task2
             }
             return new Combination(diagonal);
         }
+        #endregion
+
+        #region Конструкторы
+        public GameField(int resolution)
+        {
+            this.resolution = resolution;
+            Field = CreateField();
+            Model = CreateFieldModel();
+        }
+        #endregion
     }
 }

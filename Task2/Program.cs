@@ -16,7 +16,6 @@
                 var control = new KeyBoardControl(resolution);
                 var player1 = new Human("X", control);
                 var player2 = new Human("O", control);
-                //  var player2 = new NeuralNetwork("O", control);  //  Заготовка на будущее.
                 var game = new Game(resolution, player1, player2);
                 game.Start();
 
