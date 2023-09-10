@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         { 
-            var phonebook = Phonebook.GetInstance();
+            var phonebook = PhoneBook.GetInstance();
         }
     }
 }

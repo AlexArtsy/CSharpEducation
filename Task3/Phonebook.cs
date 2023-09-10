@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -10,17 +11,31 @@ using System.Threading.Tasks;
 
 namespace Task3
 {
-    internal class Phonebook
+    internal class PhoneBook
     {
         #region Поля
-
-        private static Phonebook instance;
-        public List<Subscriber> subscribers;
+        private static string fileName = "phonebook.txt";
+        private static PhoneBook instance;
         #endregion
         #region Свойства
+        public List<Subscriber> Subscribers { get; set; }
         #endregion
         #region Методы
 
+        private List<Subscriber> InitSubscribers()
+        {
+            var dir = Directory.GetCurrentDirectory();
+            var path = @$"{dir}\{fileName}";
+
+            if (!File.Exists(path))
+            {
+                File.Create(path).Close();
+                File.WriteAllText(path, "[]");
+            }
+
+            var data = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<List<Subscriber>>(data) ?? new List<Subscriber>();
+        }
         public bool AddNewPhoneNumber(string phoneNumber)
         {
             return true;
@@ -41,35 +56,17 @@ namespace Task3
 
         //}
 
-        public static Phonebook GetInstance()
+        public static PhoneBook GetInstance()
         {
             if (instance == null)
-                instance = new Phonebook();
+                instance = new PhoneBook();
             return instance;
         }
         #endregion
         #region Конструкторы
-        private Phonebook()
+        private PhoneBook()
         {
-            var dir = Directory.GetCurrentDirectory();
-            var path = @$"{dir}\phonebook.txt";
-            if (!File.Exists(path))
-            {
-                File.Create(path).Close();
-                File.WriteAllText(path, "[]");
-            }
-            var data = File.ReadAllText(path);
-            this.subscribers = JsonSerializer.Deserialize<List<Subscriber>>(data) ?? new List<Subscriber>();
-            var user = new Subscriber("Vanya", "123456");
-            this.subscribers.Add(user);
-            File.WriteAllText(path, JsonSerializer.Serialize(this.subscribers));
-
-            var user2 = new Subscriber("Sisya", "123456");
-            this.subscribers.Add(user2);
-            File.WriteAllText(path, JsonSerializer.Serialize(this.subscribers));
-
-            Console.WriteLine(path);
-
+            this.Subscribers = InitSubscribers();
         }
         #endregion
     }
