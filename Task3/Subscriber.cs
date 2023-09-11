@@ -19,8 +19,20 @@ namespace Task3
 
         #region Методы
 
-        
-        
+        public bool AddPhoneNumber(string phoneNumber)
+        {
+            if (this.PhoneNumberList.Contains(phoneNumber))
+            {
+                return false;
+            }
+            this.PhoneNumberList.Add(phoneNumber);
+            return true;
+        }
+        public bool DeletePhoneNumber(string phoneNumber)
+        {
+            return this.PhoneNumberList.Remove(phoneNumber);
+        }
+
         #endregion
 
         #region Конструкторы

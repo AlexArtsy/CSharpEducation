@@ -36,8 +36,9 @@ namespace Task3
             var data = File.ReadAllText(path);
             return JsonSerializer.Deserialize<List<Subscriber>>(data) ?? new List<Subscriber>();
         }
-        public bool AddNewPhoneNumber(string phoneNumber)
+        public bool AddNewPhoneNumber(Subscriber subscriber, string phoneNumber)
         {
+            
             return true;
         }
 
@@ -46,7 +47,12 @@ namespace Task3
             return true;
         }
 
-        //public Subscriber SearchSubscriberByPhoneNumber(string phoneNumber)
+        public void DeleteSubscriber(string userName)
+        {
+            this.Subscribers.RemoveAll((subscriber) => subscriber.Name == userName);
+        }
+
+        //public Subscriber GetSubscriberByPhoneNumber(string phoneNumber)
         //{
 
         //}
@@ -58,9 +64,7 @@ namespace Task3
 
         public static PhoneBook GetInstance()
         {
-            if (instance == null)
-                instance = new PhoneBook();
-            return instance;
+            return instance ?? new PhoneBook();
         }
         #endregion
         #region Конструкторы
