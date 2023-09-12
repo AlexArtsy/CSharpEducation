@@ -45,6 +45,19 @@ namespace Task3
             ItemList.Add(itemName);
         }
 
+        public void ClearLine(int x, int y)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write("                                                                          ");
+            Console.SetCursorPosition(x, y);
+        }
+        public void RenderSearchLine()
+        {
+            Console.SetCursorPosition(0, 3);
+            Console.Write("Абонент:");
+            ClearLine(10, 3);
+            Console.Write(Program.searchData);
+        }
         public void KeyEventListener(ConsoleKey key)
         {
             switch (key)
@@ -56,6 +69,14 @@ namespace Task3
                 case ConsoleKey.RightArrow:
                     this.itemId = this.itemId == this.itemValue ? 1 : this.itemId + 1;
                     RenderMenu();
+                    break;
+                case ConsoleKey.Backspace:
+                    Program.searchData = Program.searchData.Substring(0, Program.searchData.Length - 2);
+                    RenderSearchLine();
+                    break;
+                default:
+                    Program.searchData += Console.ReadKey().KeyChar;
+                    RenderSearchLine();
                     break;
             }
         } 
