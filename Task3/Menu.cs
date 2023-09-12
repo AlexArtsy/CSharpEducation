@@ -11,88 +11,32 @@ namespace Task3
     internal class Menu
     {
         #region Поля
-        private int itemValue;
-        private int itemId = 1;
-        private string[] itemsNames;
+        public int selectedItemId = 1;
+        public List<Item> items = new List<Item>();
         #endregion
 
         #region Свойства
-        public List<string> ItemList { get; set; }
-        public List<Item> Items { get; set; }
         #endregion
 
         #region Методы
 
-        public void RenderItem(Item item)
+        public void SelectItemLeft()
         {
-            Console.SetCursorPosition(item.xRenderPosition, 0);
-            if (item.Id == this.itemId)
-            {
-                Console.BackgroundColor = ConsoleColor.White;
-                Console.ForegroundColor = ConsoleColor.Black;
-            }
-            Console.Write(item.Name);
-            Console.ResetColor();
+            this.selectedItemId = this.selectedItemId == 1 ? this.items.Count : (this.selectedItemId - 1);
         }
-        public void RenderMenu()
+        public void SelectItemRight()
         {
-            Items.ForEach(RenderItem);
-            Console.WriteLine();
+            this.selectedItemId = this.selectedItemId == this.items.Count ? 1 : (this.selectedItemId + 1);
         }
-
-        public void AddItem(string itemName)
-        {
-            ItemList.Add(itemName);
-        }
-
-        public void ClearLine(int x, int y)
-        {
-            Console.SetCursorPosition(x, y);
-            Console.Write("                                                                          ");
-            Console.SetCursorPosition(x, y);
-        }
-        public void RenderSearchLine()
-        {
-            Console.SetCursorPosition(0, 3);
-            Console.Write("Абонент:");
-            ClearLine(10, 3);
-            Console.Write(Program.searchData);
-        }
-        public void KeyEventListener(ConsoleKey key)
-        {
-            switch (key)
-            {
-                case ConsoleKey.LeftArrow:
-                    this.itemId = this.itemId == 1 ? this.itemValue : this.itemId - 1;
-                    RenderMenu();
-                    break;
-                case ConsoleKey.RightArrow:
-                    this.itemId = this.itemId == this.itemValue ? 1 : this.itemId + 1;
-                    RenderMenu();
-                    break;
-                case ConsoleKey.Backspace:
-                    Program.searchData = Program.searchData.Substring(0, Program.searchData.Length - 2);
-                    RenderSearchLine();
-                    break;
-                default:
-                    Program.searchData += Console.ReadKey().KeyChar;
-                    RenderSearchLine();
-                    break;
-            }
-        } 
         #endregion
 
         #region Конструкторы
         public Menu(string[] itemsNames)
         {
-            this.itemValue = itemsNames.Length;
-            this.itemsNames = itemsNames;
-
-            Items = new List<Item>();
-            int itemWith = this.itemsNames.OrderByDescending(n => n.Length).First().Length + 3;
-            for (int i = 1; i <= this.itemValue; i += 1)
+            int itemWith = itemsNames.OrderByDescending(n => n.Length).First().Length + 3;
+            for (int i = 1; i <= itemsNames.Length; i += 1)
             {
-                Items.Add(new Item(i, itemsNames[i - 1],  1 + (i - 1) * itemWith, 0));
+                this.items.Add(new Item(i, itemsNames[i - 1],  1 + (i - 1) * itemWith, 0));
             }
         }
         #endregion

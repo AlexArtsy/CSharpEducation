@@ -18,23 +18,21 @@ namespace Task3
         private static PhoneBook instance;
         #endregion
         #region Свойства
+        public State State { get; set; }
+        public RenderProcessor Render { get; set; }
+        public KeyboardControl Control { get; set; }
         public List<Subscriber> Subscribers { get; set; }
         #endregion
+
         #region Методы
-
-        private List<Subscriber> InitSubscribers()
+        public void Run()
         {
-            var dir = Directory.GetCurrentDirectory();
-            var path = @$"{dir}\{fileName}";
-
-            if (!File.Exists(path))
+            while (true)
             {
-                File.Create(path).Close();
-                File.WriteAllText(path, "[]");
+                Render.RenderMenu(State.StartMenu);
+                Control.KeyEventListener(State.StartMenu);
             }
-
-            var data = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<List<Subscriber>>(data) ?? new List<Subscriber>();
+            
         }
         public bool AddNewPhoneNumber(Subscriber subscriber, string phoneNumber)
         {
@@ -70,7 +68,9 @@ namespace Task3
         #region Конструкторы
         private PhoneBook()
         {
-            this.Subscribers = InitSubscribers();
+            this.State = new State();
+            this.Render = new RenderProcessor(this.State);
+            this.Control = new KeyboardControl(this.State);
         }
         #endregion
     }
