@@ -46,7 +46,7 @@ namespace Task3
         public void RenderUserSearchPanel()
         {
             ClearArea(0, 3, 50, 20);
-            Console.Write($"Абонент: {State.searchData}");
+            Console.WriteLine($"Абонент: {State.searchData}");
 
             State.SuitableSubscribers.ForEach((subscriber) =>
             {

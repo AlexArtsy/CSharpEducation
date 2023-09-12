@@ -8,6 +8,7 @@ namespace Task3
 {
     internal class Item
     {
+        public delegate void DoAction(State state);
         #region Поля
         public bool isSelected = false;
         public int xRenderPosition;
@@ -17,9 +18,11 @@ namespace Task3
         #region Свойства
         public int Id { get; set; }
         public string Name { get; set; }
+        public DoAction Do { get; set; }
         #endregion
 
         #region Методы
+
         #endregion
 
         #region Конструкторы

@@ -21,7 +21,6 @@ namespace Task3
         public State State { get; set; }
         public RenderProcessor Render { get; set; }
         public KeyboardControl Control { get; set; }
-        public List<Subscriber> Subscribers { get; set; }
         #endregion
 
         #region Методы
@@ -31,10 +30,17 @@ namespace Task3
             {
                 Render.RenderMenu(State.StartMenu);
                 Render.RenderUserSearchPanel();
-                Control.KeyEventListener(State.StartMenu);
                 
+                Control.KeyEventListener(State.StartMenu);
+                State.SuitableSubscribers = GetSuitableSubscriberList();
+
             }
             
+        }
+
+        public List<Subscriber> GetSuitableSubscriberList()
+        {
+            return State.Subscribers.FindAll((s) => s.Name.Contains(State.searchData));
         }
         public bool AddNewPhoneNumber(Subscriber subscriber, string phoneNumber)
         {
@@ -47,11 +53,15 @@ namespace Task3
             return true;
         }
 
-        public void DeleteSubscriber(string userName)
+        public void DeleteSubscriber(State state)
         {
-            this.Subscribers.RemoveAll((subscriber) => subscriber.Name == userName);
+            this.State.Subscribers.RemoveAll(s => s.Name == this.State.searchData);
         }
 
+        public void AddNewSubscriber(State state)
+        {
+            state.Subscribers.Add(new Subscriber(state.searchData));
+        }
         //public Subscriber GetSubscriberByPhoneNumber(string phoneNumber)
         //{
 
@@ -73,6 +83,9 @@ namespace Task3
             this.State = new State();
             this.Render = new RenderProcessor(this.State);
             this.Control = new KeyboardControl(this.State);
+
+            this.State.StartMenu.items[0].Do = this.AddNewSubscriber;
+            this.State.StartMenu.items[2].Do = this.DeleteSubscriber;
         }
         #endregion
     }

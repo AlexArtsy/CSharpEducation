@@ -27,8 +27,11 @@ namespace Task3
                 case ConsoleKey.RightArrow:
                     menu.SelectItemRight();
                     break;
+                case ConsoleKey.Enter:
+                    menu.SelectedItem.Do(State);
+                    break;
                 case ConsoleKey.Backspace:
-                    State.searchData = State.searchData.Substring(0, State.searchData.Length - 1);
+                    State.searchData = State.searchData.Length == 0 ? "" : State.searchData.Substring(0, State.searchData.Length - 1);
                     break;
                 default:
                     State.searchData += pressedKey.KeyChar;

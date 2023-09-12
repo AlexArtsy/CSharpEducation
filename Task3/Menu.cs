@@ -16,6 +16,7 @@ namespace Task3
         #endregion
 
         #region Свойства
+        public Item SelectedItem { get; private set; }
         #endregion
 
         #region Методы
@@ -23,10 +24,12 @@ namespace Task3
         public void SelectItemLeft()
         {
             this.selectedItemId = this.selectedItemId == 1 ? this.items.Count : (this.selectedItemId - 1);
+            this.SelectedItem = this.items[this.selectedItemId - 1];
         }
         public void SelectItemRight()
         {
             this.selectedItemId = this.selectedItemId == this.items.Count ? 1 : (this.selectedItemId + 1);
+            this.SelectedItem = this.items[this.selectedItemId - 1];
         }
         #endregion
 
