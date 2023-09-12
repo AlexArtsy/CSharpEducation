@@ -21,6 +21,7 @@ namespace Task3
         public Menu SubscriberMenu { get; set; }
         public Subscriber selectedSubscriber;
         public List<Subscriber> Subscribers { get; set; }
+        public List<Subscriber> SuitableSubscribers { get; set; }
         #endregion
 
         #region Методы
@@ -47,6 +48,7 @@ namespace Task3
             this.StartMenu = new Menu(startMenuItemNames);
             this.SubscriberMenu = new Menu(subscriberMenuItemNames);
             this.Subscribers = InitSubscriberList();
+            this.SuitableSubscribers = new List<Subscriber>();
         }
         #endregion
     }

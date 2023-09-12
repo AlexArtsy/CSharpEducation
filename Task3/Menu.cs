@@ -34,6 +34,7 @@ namespace Task3
         public Menu(string[] itemsNames)
         {
             int itemWith = itemsNames.OrderByDescending(n => n.Length).First().Length + 3;
+
             for (int i = 1; i <= itemsNames.Length; i += 1)
             {
                 this.items.Add(new Item(i, itemsNames[i - 1],  1 + (i - 1) * itemWith, 0));

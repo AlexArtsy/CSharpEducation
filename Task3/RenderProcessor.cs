@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,18 +17,14 @@ namespace Task3
         #endregion
 
         #region Методы
-        public void ClearLine(int x, int y)
+        public void ClearArea(int x, int y, int width, int height)
         {
+            for (int i = y; i < height; i += 1)
+            {
+                Console.SetCursorPosition(x, i);
+                Console.Write(new string(' ', width));
+            }
             Console.SetCursorPosition(x, y);
-            Console.Write("                                                                          ");
-            Console.SetCursorPosition(x, y);
-        }
-        public void RenderSubscriberSearchLine()
-        {
-            Console.SetCursorPosition(0, 3);
-            Console.Write("Абонент:");
-            ClearLine(10, 3);
-            //Console.Write(Program.searchData);
         }
         public void RenderItem(Item item, int selectedItemId)
         {
@@ -45,6 +42,18 @@ namespace Task3
             Console.SetCursorPosition(0, 0);
             menu.items.ForEach((item) => RenderItem(item, menu.selectedItemId));
             Console.WriteLine();
+        }
+        public void RenderUserSearchPanel()
+        {
+            ClearArea(0, 3, 50, 20);
+            Console.Write($"Абонент: {State.searchData}");
+
+            State.SuitableSubscribers.ForEach((subscriber) =>
+            {
+                Console.WriteLine(subscriber.Name);
+            });
+            Console.SetCursorPosition("Абонент: ".Length + State.searchData.Length, 3);
+
         }
         #endregion
 

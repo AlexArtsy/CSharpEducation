@@ -18,7 +18,8 @@ namespace Task3
         #region Методы
         public void KeyEventListener(Menu menu)
         {
-            switch (Console.ReadKey(true).Key)
+            var pressedKey = Console.ReadKey(true);
+            switch (pressedKey.Key)
             {
                 case ConsoleKey.LeftArrow:
                     menu.SelectItemLeft();
@@ -27,12 +28,10 @@ namespace Task3
                     menu.SelectItemRight();
                     break;
                 case ConsoleKey.Backspace:
-                    //Program.searchData = Program.searchData.Substring(0, Program.searchData.Length - 2);
-                    //RenderSearchLine();
+                    State.searchData = State.searchData.Substring(0, State.searchData.Length - 1);
                     break;
                 default:
-                    //Program.searchData += Console.ReadKey().KeyChar;
-                    //RenderSearchLine();
+                    State.searchData += pressedKey.KeyChar;
                     break;
             }
         }

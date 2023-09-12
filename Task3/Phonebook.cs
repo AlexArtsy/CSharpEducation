@@ -30,7 +30,9 @@ namespace Task3
             while (true)
             {
                 Render.RenderMenu(State.StartMenu);
+                Render.RenderUserSearchPanel();
                 Control.KeyEventListener(State.StartMenu);
+                
             }
             
         }
