@@ -77,6 +77,7 @@ namespace Task3
         public void AddNewSubscriber(State state)
         {
             state.Subscribers.Add(new Subscriber(state.searchData));
+            state.Subscribers.Sort((a, b) => string.Compare(a.Name, b.Name));
             state.UpdateDataFile();
         }
         //public Subscriber GetSubscriberByPhoneNumber(string phoneNumber)
