@@ -28,14 +28,24 @@ namespace Task3
         {
             while (true)
             {
-                Render.RenderMenu(State.StartMenu);
-                Render.RenderUserSearchPanel();
-                
-                Control.KeyEventListener(State.StartMenu);
-                State.SuitableSubscribers = GetSuitableSubscriberList();
+                Render.UpdateScreen();
+                if (Render.startScreenSelected)
+                {
+                    //Render.UpdateScreen();
+                    Control.KeyEventListener(State.StartMenu);
+                    State.SuitableSubscribers = GetSuitableSubscriberList();
 
+                }
+                else if (Render.subscriberScreenSelected)
+                {
+                    //Render.UpdateScreen();
+                    Control.KeyEventListener(State.SubscriberMenu);
+                }
+                else if (Render.deleteUserQuestionScreenSelected)
+                {
+                    //Render.UpdateScreen();
+                }
             }
-            
         }
 
         public List<Subscriber> GetSuitableSubscriberList()
@@ -55,7 +65,14 @@ namespace Task3
 
         public void DeleteSubscriber(State state)
         {
-            this.State.Subscribers.RemoveAll(s => s.Name == this.State.searchData);
+            Render.RenderDeleteUserScreen();
+            var answer = Console.ReadLine();
+            if (answer == "Y" || answer == "y")
+            {
+                this.State.Subscribers.RemoveAll(s => s.Name == this.State.searchData);
+            }
+            Render.ResetAllScreenSelecting();
+            Render.startScreenSelected = true;
         }
 
         public void AddNewSubscriber(State state)

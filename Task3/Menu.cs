@@ -42,6 +42,7 @@ namespace Task3
             {
                 this.items.Add(new Item(i, itemsNames[i - 1],  1 + (i - 1) * itemWith, 0));
             }
+            this.SelectedItem = items[0];
         }
         #endregion
     }
