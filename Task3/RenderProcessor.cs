@@ -38,20 +38,27 @@ namespace Task3
             {
                 RenderMenu(State.StartMenu);
                 RenderUserSearchPanel();
+                RenderPhoneNumberPanel();
             }
             else if (subscriberScreenSelected)
             {
                 RenderMenu(State.SubscriberMenu);
-            }
-            else if (deleteUserQuestionScreenSelected)
-            {
-
+                RenderSubscriberDataPanel();
             }
         }
         public void RenderDeleteUserScreen()
         {
             Console.Clear();
             var question = "Точно удалить абонента? (Y/N) ";
+            var x = Console.WindowWidth / 2 - question.Length / 2;
+            var y = Console.WindowHeight / 2;
+            Console.SetCursorPosition(x, y);
+            Console.Write(question);
+        }
+        public void RenderDeleteALLUserScreen()
+        {
+            Console.Clear();
+            var question = "Вы уверены? Точно удалить всех абонентов (Y/N) ";
             var x = Console.WindowWidth / 2 - question.Length / 2;
             var y = Console.WindowHeight / 2;
             Console.SetCursorPosition(x, y);
@@ -86,15 +93,60 @@ namespace Task3
         }
         public void RenderUserSearchPanel()
         {
-            ClearArea(0, 3, 50, 20);
-            Console.WriteLine($"Абонент: {State.searchData}");
+            var xStartPosition = 0;
+            var yStartPosition = 3;
+            ClearArea(xStartPosition, yStartPosition, 50, 20);
+            Console.Write($"Абонент: ");
+            if (State.SelectedSubscriber.Name == State.searchData)
+            {
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            Console.Write(State.searchData);
+            Console.ResetColor();
 
+            var i = 4;
             State.SuitableSubscribers.ForEach((subscriber) =>
             {
+                Console.SetCursorPosition("Абонент: ".Length, i);
                 Console.WriteLine(subscriber.Name);
+                i += 1;
             });
-            Console.SetCursorPosition("Абонент: ".Length + State.searchData.Length, 3);
 
+            Console.SetCursorPosition("Абонент: ".Length + State.searchData.Length, 3);
+        }
+        public void RenderSubscriberDataPanel()
+        {
+            var xStartPosition = 3;
+            var yStartPosition = 3;
+            ClearArea(xStartPosition, yStartPosition, 50, 20);
+
+            Console.WriteLine($"Абонент: {State.SelectedSubscriber.Name}");
+            Console.Write("Новый номер телефона: ");
+            if (!State.isNewPhoneNumberCorrect)
+            {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            Console.Write(State.newPhoneNumber);
+            Console.ResetColor();
+        }
+        public void RenderPhoneNumberPanel()
+        {
+            var xStartPosition = 51;
+            var yStartPosition = 3;
+            ClearArea(xStartPosition, yStartPosition, 50, 20);
+            Console.SetCursorPosition(xStartPosition, yStartPosition);
+
+            var i = 4;
+            State.SelectedSubscriber.PhoneNumberList.ForEach((number) =>
+            {
+                Console.SetCursorPosition(xStartPosition, i);
+                Console.WriteLine(number);
+                i += 1;
+            });
+
+            Console.SetCursorPosition("Абонент: ".Length + State.searchData.Length, 3);
         }
         #endregion
 

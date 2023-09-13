@@ -16,7 +16,7 @@ namespace Task3
         #endregion
 
         #region Методы
-        public void KeyEventListener(Menu menu)
+        public void KeyEventListener(Menu menu, RenderProcessor render)
         {
             var pressedKey = Console.ReadKey(true);
             switch (pressedKey.Key)
@@ -27,14 +27,38 @@ namespace Task3
                 case ConsoleKey.RightArrow:
                     menu.SelectItemRight();
                     break;
+                case ConsoleKey.UpArrow:
+                    
+                    break;
+                case ConsoleKey.DownArrow:
+                    
+                    break;
                 case ConsoleKey.Enter:
                     menu.SelectedItem.Do(State);
                     break;
                 case ConsoleKey.Backspace:
-                    State.searchData = State.searchData.Length == 0 ? "" : State.searchData.Substring(0, State.searchData.Length - 1);
+                    if (render.startScreenSelected)
+                    {
+                        State.searchData = State.searchData.Length == 0 
+                            ? "" 
+                            : State.searchData.Substring(0, State.searchData.Length - 1);
+                    }
+                    else if (render.subscriberScreenSelected)
+                    {
+                        State.newPhoneNumber = State.newPhoneNumber.Length == 0
+                            ? ""
+                            : State.newPhoneNumber.Substring(0, State.newPhoneNumber.Length - 1);
+                    }
                     break;
                 default:
-                    State.searchData += pressedKey.KeyChar;
+                    if (render.startScreenSelected)
+                    {
+                        State.searchData += pressedKey.KeyChar;
+                    }
+                    else if (render.subscriberScreenSelected)
+                    {
+                        State.newPhoneNumber += pressedKey.KeyChar;
+                    }
                     break;
             }
         }

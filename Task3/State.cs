@@ -16,12 +16,16 @@ namespace Task3
         private string[] startMenuItemNames = { "Добавить абонента", "Изменить данные", "Удалить абонента", "Удалить всех" };
         private string[] subscriberMenuItemNames = { "Добавить номер", "Изменить номер", "Удалить номер", "Удалить все номера" };
         public string searchData = "";
+        public bool isNewSubscriberNameCorrect = false;
+        public string newPhoneNumber = "";
+        public bool isNewPhoneNumberCorrect = false;
+        public int maxSubscriberLengthName = 30;
         #endregion
 
         #region Свойства
         public Menu StartMenu { get; set; }
         public Menu SubscriberMenu { get; set; }
-        public Subscriber selectedSubscriber;
+        public Subscriber SelectedSubscriber { get; set; }
         public List<Subscriber> Subscribers { get; set; }
         public List<Subscriber> SuitableSubscribers { get; set; }
         #endregion
