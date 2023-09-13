@@ -34,7 +34,6 @@ namespace Task3
         }
         public void UpdateScreen()
         {
-           // Console.Clear();
             if (startScreenSelected)
             {
                 RenderMenu(State.StartMenu);

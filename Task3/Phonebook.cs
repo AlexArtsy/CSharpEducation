@@ -31,19 +31,17 @@ namespace Task3
                 Render.UpdateScreen();
                 if (Render.startScreenSelected)
                 {
-                    //Render.UpdateScreen();
                     Control.KeyEventListener(State.StartMenu);
                     State.SuitableSubscribers = GetSuitableSubscriberList();
 
                 }
                 else if (Render.subscriberScreenSelected)
                 {
-                    //Render.UpdateScreen();
                     Control.KeyEventListener(State.SubscriberMenu);
                 }
                 else if (Render.deleteUserQuestionScreenSelected)
                 {
-                    //Render.UpdateScreen();
+
                 }
             }
         }
@@ -70,6 +68,7 @@ namespace Task3
             if (answer == "Y" || answer == "y")
             {
                 this.State.Subscribers.RemoveAll(s => s.Name == this.State.searchData);
+                state.UpdateDataFile();
             }
             Render.ResetAllScreenSelecting();
             Render.startScreenSelected = true;
@@ -78,6 +77,7 @@ namespace Task3
         public void AddNewSubscriber(State state)
         {
             state.Subscribers.Add(new Subscriber(state.searchData));
+            state.UpdateDataFile();
         }
         //public Subscriber GetSubscriberByPhoneNumber(string phoneNumber)
         //{

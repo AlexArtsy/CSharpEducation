@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -11,6 +12,7 @@ namespace Task3
     {
         #region Поля
         private string fileName = "phonebook.txt";
+        private string path;
         private string[] startMenuItemNames = { "Добавить абонента", "Изменить данные", "Удалить абонента", "Удалить всех" };
         private string[] subscriberMenuItemNames = { "Добавить номер", "Изменить номер", "Удалить номер", "Удалить все номера" };
         public string searchData = "";
@@ -28,7 +30,7 @@ namespace Task3
         private List<Subscriber> InitSubscriberList()
         {
             var dir = Directory.GetCurrentDirectory();
-            var path = @$"{dir}\{this.fileName}";
+            this.path = @$"{dir}\{this.fileName}";
 
             if (!File.Exists(path))
             {
@@ -39,6 +41,11 @@ namespace Task3
             var data = File.ReadAllText(path);
             return JsonSerializer.Deserialize<List<Subscriber>>(data) ?? new List<Subscriber>();
         }
+        public void UpdateDataFile()
+        {
+            var data = JsonSerializer.Serialize(Subscribers);
+            File.WriteAllText(path, data);
+        }
         #endregion
 
         #region Конструкторы
@@ -48,7 +55,7 @@ namespace Task3
             this.StartMenu = new Menu(startMenuItemNames);
             this.SubscriberMenu = new Menu(subscriberMenuItemNames);
             this.Subscribers = InitSubscriberList();
-            this.SuitableSubscribers = new List<Subscriber>();
+            this.SuitableSubscribers = this.Subscribers;
         }
         #endregion
     }
