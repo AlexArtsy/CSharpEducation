@@ -13,8 +13,12 @@ namespace Task3
         #region Поля
         private string fileName = "phonebook.txt";
         private string path;
-        private string[] startMenuItemNames = { "Добавить абонента", "Изменить данные", "Удалить абонента", "Удалить всех" };
-        private string[] subscriberMenuItemNames = { "Добавить номер", "Изменить номер", "Удалить номер", "Удалить все номера" };
+        public Window mainWindow;
+        public Window settingsWindow;
+        public QuestionScreen removeOneScreen;
+        public QuestionScreen removeAllScreen;
+
+
         public string searchData = "";
         public bool isNewSubscriberNameCorrect = false;
         public string newPhoneNumber = "";
@@ -56,10 +60,19 @@ namespace Task3
 
         public State()
         {
-            this.StartMenu = new Menu(startMenuItemNames);
-            this.SubscriberMenu = new Menu(subscriberMenuItemNames);
             this.Subscribers = InitSubscriberList();
             this.SuitableSubscribers = this.Subscribers;
+
+            string[] mainMenuItems = { "Добавить", "Изменить", "Удалить", "Удалить всех" };
+            Menu mainMenu = new Menu(mainMenuItems);
+            this.mainWindow = new Window(0, 0, 0);
+            mainWindow.MenuList.Add(mainMenu);
+            mainWindow.IsSelected = true;
+
+            string[] subMenuItems = { "Добавить номер", "Изменить номер", "Удалить номер", "Удалить все" };
+            Menu subMenu = new Menu(subMenuItems);
+            this.settingsWindow = new Window(0, 0, 0);
+            settingsWindow.MenuList.Add(subMenu);
         }
         #endregion
     }

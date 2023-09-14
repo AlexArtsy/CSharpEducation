@@ -24,7 +24,7 @@ namespace Task3
             this.xCenterCoordinate = this.Width - this.question.Length / 2;
             this.yCenterCoordinate = this.Height / 2;
         }
-        public string RenderQuestion()
+        public string Render()
         {
             Console.Clear();
             Console.SetCursorPosition(this.xCenterCoordinate, this.yCenterCoordinate);

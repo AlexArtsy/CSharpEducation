@@ -1,39 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Task3
 {
-    internal class RenderProcessor
+    internal class InputArea : Item
     {
         #region Поля
-        private readonly State state;
+        public int id;
         #endregion
 
         #region Свойства
+        public string Value { get; set; }
         #endregion
 
         #region Методы
-        public void Render(Window window)
+        public void Render()
         {
-            window.Render();
-        }
 
-        
-        
+        }
         #endregion
 
         #region Конструкторы
-        public RenderProcessor(State state)
+        public InputArea(int id, string value, int x, int y, int width) : base(id, value, x, y, width)
         {
-            this.state = state;
-
-
+            this.id = id;
+            this.Value = value;
         }
         #endregion
     }

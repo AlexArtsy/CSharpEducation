@@ -15,119 +15,64 @@ namespace Task3
     internal class PhoneBook
     {
         #region Поля
-        private static string fileName = "phonebook.txt";
+        private readonly State state;
         private static PhoneBook instance;
-        private Subscriber nullSubscriber = new Subscriber("null"); //  Заглушка на случай отсутствия абонента.
+        private readonly Regex newSubscriberRegex = new Regex(@"\d+");
+        private readonly Regex newPhoneNumberRegex = new Regex(@"\d+");
+       //    private readonly Subscriber nullSubscriber = new Subscriber("null"); //  Заглушка на случай отсутствия абонента.
         #endregion
+
         #region Свойства
-        public State State { get; set; }
-        public RenderProcessor Render { get; set; }
-        public KeyboardControl Control { get; set; }
         #endregion
 
         #region Методы
-        public void Run()
-        {
-            while (true)
-            {
-                Render.UpdateScreen();
-                if (Render.startScreenSelected)
-                {
-                    Control.KeyEventListener(State.StartMenu, Render);
-                    State.SuitableSubscribers = GetSuitableSubscriberList();
-                    if (State.SuitableSubscribers.Count == 1)
-                    {
-                        State.SelectedSubscriber = State.SuitableSubscribers[0];
-                    }
-                    else
-                    {
-                        State.SelectedSubscriber = this.nullSubscriber;
-                    }
-                }
-                else if (Render.subscriberScreenSelected)
-                {
-                    Control.KeyEventListener(State.SubscriberMenu, Render);
-                    State.isNewPhoneNumberCorrect = CheckNewPhoneNumber(State.newPhoneNumber);
-                }
-            }
-        }
-        public List<Subscriber> GetSuitableSubscriberList()
-        {
-            return State.Subscribers.FindAll((s) => s.Name.Contains(State.searchData));
-        }
-        public void DeleteSubscriber(State state)
-        {
-            Render.RenderDeleteUserScreen();
-            var answer = Console.ReadLine();
-            if (answer == "Y" || answer == "y")
-            {
-                this.State.Subscribers.RemoveAll(s => s.Name == this.State.searchData);
-                state.UpdateDataFile();
-            }
-            Render.ResetAllScreenSelecting();
-            Render.startScreenSelected = true;
-        }
-        public void DeleteAllSubscriber(State state)
-        {
-            Render.RenderDeleteALLUserScreen();
-            var answer = Console.ReadLine();
-            if (answer == "Y" || answer == "y")
-            {
-                this.State.Subscribers.RemoveAll(s => true);
-                state.UpdateDataFile();
-            }
-            Render.ResetAllScreenSelecting();
-            Render.startScreenSelected = true;
-        }
 
-        public void AddNewSubscriber(State state)
+        #region Subscribers CRUD
+        public void AddNewSubscriber()
         {
-            state.Subscribers.Add(new Subscriber(state.searchData));
-            state.Subscribers.Sort((a, b) => string.Compare(a.Name, b.Name));
+            this.state.Subscribers.Add(new Subscriber(state.searchData));
+            this.state.Subscribers.Sort((a, b) => string.Compare(a.Name, b.Name));
+            this.state.UpdateDataFile();
+        }
+        public void DeleteSubscriber()
+        {
+            this.state.Subscribers.RemoveAll(s => s.Name == this.state.searchData);
             state.UpdateDataFile();
         }
-        public void ChangeSubscriberData(State state)
+        public void DeleteAllSubscriber()
         {
-            Render.ResetAllScreenSelecting();
-            Render.subscriberScreenSelected = true;
+            this.state.Subscribers.RemoveAll(s => true);
+            this.state.UpdateDataFile();
         }
+        #endregion
 
-        public void AddNewPhoneNumber(State state)
+        #region PhoneNumbers CRUD
+        public void AddNewPhoneNumber()
         {
-            if (State.isNewPhoneNumberCorrect)
+            if (state.isNewPhoneNumberCorrect)
             {
-                State.SelectedSubscriber.PhoneNumberList.Add(State.newPhoneNumber);
-                State.newPhoneNumber = "";
-                state.UpdateDataFile();
+                this.state.SelectedSubscriber.PhoneNumberList.Add(this.state.newPhoneNumber);
             }
+        }
+        #endregion
+        public List<Subscriber> GetSuitableSubscriberList(string name)
+        {
+            return this.state.Subscribers.FindAll((s) => s.Name.Contains(name));
         }
         public bool CheckNewPhoneNumber(string number)
         {
-            Regex regex = new Regex(@"\d+");
-            return regex.IsMatch(number);
+            return this.newPhoneNumberRegex.IsMatch(number);
         }
-        public static PhoneBook GetInstance()
+        public static PhoneBook GetInstance(State state)
         {
-            return instance ?? new PhoneBook();
+            return instance ?? new PhoneBook(state);
         }
         #endregion
+
         #region Конструкторы
-        private PhoneBook()
+        private PhoneBook(State state)
         {
-            this.State = new State();
-            this.Render = new RenderProcessor(this.State);
-            this.Control = new KeyboardControl(this.State);
-            State.SelectedSubscriber = this.nullSubscriber;
-
-            this.State.StartMenu.items[0].Do = this.AddNewSubscriber;
-            this.State.StartMenu.items[1].Do = this.ChangeSubscriberData;
-            this.State.StartMenu.items[2].Do = this.DeleteSubscriber;
-            this.State.StartMenu.items[3].Do = this.DeleteAllSubscriber;
-
-            this.State.SubscriberMenu.items[0].Do = this.AddNewPhoneNumber;
-            this.State.SubscriberMenu.items[1].Do = this.ChangeSubscriberData;
-            this.State.SubscriberMenu.items[2].Do = this.DeleteSubscriber;
-            this.State.SubscriberMenu.items[3].Do = this.DeleteAllSubscriber;
+            this.state = state;
         }
         #endregion
     }

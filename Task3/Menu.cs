@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,36 +20,25 @@ namespace Task3
         #endregion
 
         #region Методы
-        private void ResetItem()
-        {
-            this.Items.ForEach((i) => i.IsSelected = false);
-        }
         public void SetItem(int id)
         {
-            ResetItem();
+            this.SelectedItem.IsSelected = false;
             this.SelectedItem = this.Items[id];
             this.SelectedItem.IsSelected = true;
         }
-        private int GetCurrentItemId()
-        {
-            return this.Items.Find((i) => i.IsSelected == true).Id;
-        }
         public void SelectItemLeft()
         {
-            var currentId = GetCurrentItemId();
-            var newId = currentId == 0 ? this.Items.Count : (currentId - 1);
+            var newId = this.SelectedItem.Id == 0 ? this.Items.Count - 1 : (this.SelectedItem.Id - 1);
             SetItem(newId);
         }
         public void SelectItemRight()
         {
-            var currentId = GetCurrentItemId();
-            var newId = currentId == this.Items.Count ? 0 : (currentId + 1);
+            var newId = this.SelectedItem.Id == this.Items.Count - 1 ? 0 : (this.SelectedItem.Id + 1);
             SetItem(newId);
         }
         public void Render(int outerX, int outerY)
         {
             this.Items.ForEach((item) => item.Render(outerX, outerY));
-            Console.Write("    <-- выбирать кнопкой Enter");
         }
         #endregion
 
@@ -62,7 +52,9 @@ namespace Task3
             {
                 this.Items.Add(new Item(i, itemsNames[i],  1 + i * itemWidth, 0, itemWidth));
             }
-            this.SelectedItem = this.Items[0];
+            this.SelectedItem = Items[0];
+            SetItem(0);
+
         }
         #endregion
     }

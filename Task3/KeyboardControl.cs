@@ -16,9 +16,11 @@ namespace Task3
         #endregion
 
         #region Методы
-        public void KeyEventListener(Menu menu, RenderProcessor render)
+        public void KeyEventListener(Window window)
         {
+            var menu = window.MenuList[0];
             var pressedKey = Console.ReadKey(true);
+
             switch (pressedKey.Key)
             {
                 case ConsoleKey.LeftArrow:
@@ -28,43 +30,21 @@ namespace Task3
                     menu.SelectItemRight();
                     break;
                 case ConsoleKey.UpArrow:
-                    if (render.subscriberScreenSelected)
-                    {
-                        
-                    }
+
                     break;
                 case ConsoleKey.DownArrow:
-                    if (render.subscriberScreenSelected)
-                    {
 
-                    }
                     break;
                 case ConsoleKey.Enter:
-                    menu.SelectedItem.Do(State);
+                    menu.SelectedItem.Do();
                     break;
                 case ConsoleKey.Backspace:
-                    if (render.startScreenSelected)
-                    {
-                        State.searchData = State.searchData.Length == 0 
+                    State.searchData = State.searchData.Length == 0 
                             ? "" 
                             : State.searchData.Substring(0, State.searchData.Length - 1);
-                    }
-                    else if (render.subscriberScreenSelected)
-                    {
-                        State.newPhoneNumber = State.newPhoneNumber.Length == 0
-                            ? ""
-                            : State.newPhoneNumber.Substring(0, State.newPhoneNumber.Length - 1);
-                    }
                     break;
                 default:
-                    if (render.startScreenSelected)
-                    {
-                        State.searchData += pressedKey.KeyChar;
-                    }
-                    else if (render.subscriberScreenSelected)
-                    {
-                        State.newPhoneNumber += pressedKey.KeyChar;
-                    }
+                    State.searchData += pressedKey.KeyChar;
                     break;
             }
         }
