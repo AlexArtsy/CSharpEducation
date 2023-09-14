@@ -28,10 +28,16 @@ namespace Task3
                     menu.SelectItemRight();
                     break;
                 case ConsoleKey.UpArrow:
-                    
+                    if (render.subscriberScreenSelected)
+                    {
+                        
+                    }
                     break;
                 case ConsoleKey.DownArrow:
-                    
+                    if (render.subscriberScreenSelected)
+                    {
+
+                    }
                     break;
                 case ConsoleKey.Enter:
                     menu.SelectedItem.Do(State);

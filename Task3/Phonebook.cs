@@ -92,18 +92,19 @@ namespace Task3
             Render.subscriberScreenSelected = true;
         }
 
-        public void AddNewPhoneNumber()
+        public void AddNewPhoneNumber(State state)
         {
             if (State.isNewPhoneNumberCorrect)
             {
                 State.SelectedSubscriber.PhoneNumberList.Add(State.newPhoneNumber);
                 State.newPhoneNumber = "";
+                state.UpdateDataFile();
             }
         }
         public bool CheckNewPhoneNumber(string number)
         {
             Regex regex = new Regex(@"\d+");
-            return regex.IsMatch(number) & number.Length == 6;
+            return regex.IsMatch(number);
         }
         public static PhoneBook GetInstance()
         {
@@ -122,6 +123,11 @@ namespace Task3
             this.State.StartMenu.items[1].Do = this.ChangeSubscriberData;
             this.State.StartMenu.items[2].Do = this.DeleteSubscriber;
             this.State.StartMenu.items[3].Do = this.DeleteAllSubscriber;
+
+            this.State.SubscriberMenu.items[0].Do = this.AddNewPhoneNumber;
+            this.State.SubscriberMenu.items[1].Do = this.ChangeSubscriberData;
+            this.State.SubscriberMenu.items[2].Do = this.DeleteSubscriber;
+            this.State.SubscriberMenu.items[3].Do = this.DeleteAllSubscriber;
         }
         #endregion
     }

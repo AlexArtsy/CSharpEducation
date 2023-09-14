@@ -39,11 +39,14 @@ namespace Task3
                 RenderMenu(State.StartMenu);
                 RenderUserSearchPanel();
                 RenderPhoneNumberPanel();
+                Console.SetCursorPosition("Абонент: ".Length + State.searchData.Length, 3);
             }
             else if (subscriberScreenSelected)
             {
                 RenderMenu(State.SubscriberMenu);
                 RenderSubscriberDataPanel();
+                RenderPhoneNumberPanel(); 
+                // Console.SetCursorPosition("Новый номер телефона: ".Length + State.newPhoneNumber.Length, 4);
             }
         }
         public void RenderDeleteUserScreen()
@@ -121,32 +124,36 @@ namespace Task3
             var yStartPosition = 3;
             ClearArea(xStartPosition, yStartPosition, 50, 20);
 
-            Console.WriteLine($"Абонент: {State.SelectedSubscriber.Name}");
+            Console.WriteLine($"         Абонент: {State.SelectedSubscriber.Name}");
             Console.Write("Новый номер телефона: ");
             if (!State.isNewPhoneNumberCorrect)
             {
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.ForegroundColor = ConsoleColor.White;
             }
-            Console.Write(State.newPhoneNumber);
+            RenderNewPhoneNumberInputArea(22, 4, State.newPhoneNumber);
             Console.ResetColor();
+
+            
         }
         public void RenderPhoneNumberPanel()
         {
             var xStartPosition = 51;
             var yStartPosition = 3;
             ClearArea(xStartPosition, yStartPosition, 50, 20);
-            Console.SetCursorPosition(xStartPosition, yStartPosition);
 
-            var i = 4;
+            var i = yStartPosition;
             State.SelectedSubscriber.PhoneNumberList.ForEach((number) =>
             {
                 Console.SetCursorPosition(xStartPosition, i);
-                Console.WriteLine(number);
+                Console.Write(number);
                 i += 1;
             });
-
-            Console.SetCursorPosition("Абонент: ".Length + State.searchData.Length, 3);
+        }
+        public void RenderNewPhoneNumberInputArea(int x, int y, string number)
+        {
+            ClearArea(x, y, 50, 1);
+            Console.Write(number);
         }
         #endregion
 
