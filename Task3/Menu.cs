@@ -11,38 +11,58 @@ namespace Task3
     internal class Menu
     {
         #region Поля
-        public int selectedItemId = 1;
-        public List<Item> items = new List<Item>();
         #endregion
 
         #region Свойства
-        public Item SelectedItem { get; private set; }
+        public List<Item> Items { get; set; }
+        public Item SelectedItem { get; set; }
         #endregion
 
         #region Методы
-
+        private void ResetItem()
+        {
+            this.Items.ForEach((i) => i.IsSelected = false);
+        }
+        public void SetItem(int id)
+        {
+            ResetItem();
+            this.SelectedItem = this.Items[id];
+            this.SelectedItem.IsSelected = true;
+        }
+        private int GetCurrentItemId()
+        {
+            return this.Items.Find((i) => i.IsSelected == true).Id;
+        }
         public void SelectItemLeft()
         {
-            this.selectedItemId = this.selectedItemId == 1 ? this.items.Count : (this.selectedItemId - 1);
-            this.SelectedItem = this.items[this.selectedItemId - 1];
+            var currentId = GetCurrentItemId();
+            var newId = currentId == 0 ? this.Items.Count : (currentId - 1);
+            SetItem(newId);
         }
         public void SelectItemRight()
         {
-            this.selectedItemId = this.selectedItemId == this.items.Count ? 1 : (this.selectedItemId + 1);
-            this.SelectedItem = this.items[this.selectedItemId - 1];
+            var currentId = GetCurrentItemId();
+            var newId = currentId == this.Items.Count ? 0 : (currentId + 1);
+            SetItem(newId);
+        }
+        public void Render(int outerX, int outerY)
+        {
+            this.Items.ForEach((item) => item.Render(outerX, outerY));
+            Console.Write("    <-- выбирать кнопкой Enter");
         }
         #endregion
 
         #region Конструкторы
         public Menu(string[] itemsNames)
         {
-            int itemWith = itemsNames.OrderByDescending(n => n.Length).First().Length + 3;
+            this.Items = new List<Item>();
+            int itemWidth = itemsNames.OrderByDescending(n => n.Length).First().Length + 3;
 
-            for (int i = 1; i <= itemsNames.Length; i += 1)
+            for (int i = 0; i < itemsNames.Length; i += 1)
             {
-                this.items.Add(new Item(i, itemsNames[i - 1],  1 + (i - 1) * itemWith, 0));
+                this.Items.Add(new Item(i, itemsNames[i],  1 + i * itemWidth, 0, itemWidth));
             }
-            this.SelectedItem = items[0];
+            this.SelectedItem = this.Items[0];
         }
         #endregion
     }

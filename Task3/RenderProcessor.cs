@@ -12,7 +12,6 @@ namespace Task3
     internal class RenderProcessor
     {
         #region Поля
-
         public bool startScreenSelected = true;
         public bool subscriberScreenSelected = false;
 
