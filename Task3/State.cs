@@ -15,23 +15,19 @@ namespace Task3
         private string path;
         public Window mainWindow;
         public Window settingsWindow;
-        public QuestionScreen removeOneScreen;
-        public QuestionScreen removeAllScreen;
+        private readonly Subscriber nullSubscriber = new Subscriber("_"); //  Заглушка на случай отсутствия абонента.
 
-
-        public string searchData = "";
         public bool isNewSubscriberNameCorrect = false;
         public string newPhoneNumber = "";
         public bool isNewPhoneNumberCorrect = false;
-        public int maxSubscriberLengthName = 30;
         #endregion
 
         #region Свойства
-        public Menu StartMenu { get; set; }
-        public Menu SubscriberMenu { get; set; }
+        public string InputData { get; set; }
         public Subscriber SelectedSubscriber { get; set; }
         public List<Subscriber> Subscribers { get; set; }
-        public List<Subscriber> SuitableSubscribers { get; set; }
+        public List<Item> SubscriberItemList { get; set; }
+        //public List<Subscriber> SuitableSubscribers { get; set; }
         #endregion
 
         #region Методы
@@ -49,30 +45,20 @@ namespace Task3
             var data = File.ReadAllText(path);
             return JsonSerializer.Deserialize<List<Subscriber>>(data) ?? new List<Subscriber>();
         }
-        public void UpdateDataFile()
+        public void UpdateDataFile(State state)
         {
-            var data = JsonSerializer.Serialize(Subscribers);
+            var data = JsonSerializer.Serialize(state.Subscribers);
             File.WriteAllText(path, data);
         }
         #endregion
 
         #region Конструкторы
-
         public State()
         {
             this.Subscribers = InitSubscriberList();
-            this.SuitableSubscribers = this.Subscribers;
-
-            string[] mainMenuItems = { "Добавить", "Изменить", "Удалить", "Удалить всех" };
-            Menu mainMenu = new Menu(mainMenuItems);
-            this.mainWindow = new Window(0, 0, 0);
-            mainWindow.MenuList.Add(mainMenu);
-            mainWindow.IsSelected = true;
-
-            string[] subMenuItems = { "Добавить номер", "Изменить номер", "Удалить номер", "Удалить все" };
-            Menu subMenu = new Menu(subMenuItems);
-            this.settingsWindow = new Window(0, 0, 0);
-            settingsWindow.MenuList.Add(subMenu);
+            //this.SuitableSubscribers = this.Subscribers;
+            this.InputData = "";
+            //this.SelectedSubscriber = this.Subscribers[0] ?? nullSubscriber;
         }
         #endregion
     }

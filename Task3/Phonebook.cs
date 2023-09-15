@@ -19,7 +19,6 @@ namespace Task3
         private static PhoneBook instance;
         private readonly Regex newSubscriberRegex = new Regex(@"\d+");
         private readonly Regex newPhoneNumberRegex = new Regex(@"\d+");
-       //    private readonly Subscriber nullSubscriber = new Subscriber("null"); //  Заглушка на случай отсутствия абонента.
         #endregion
 
         #region Свойства
@@ -28,37 +27,33 @@ namespace Task3
         #region Методы
 
         #region Subscribers CRUD
-        public void AddNewSubscriber()
+        public void AddNewSubscriber(State state)
         {
-            this.state.Subscribers.Add(new Subscriber(state.searchData));
-            this.state.Subscribers.Sort((a, b) => string.Compare(a.Name, b.Name));
-            this.state.UpdateDataFile();
+            state.Subscribers.Add(new Subscriber(state.InputData));
+            state.Subscribers.Sort((a, b) => string.Compare(a.Name, b.Name));
+            SubscriberListChanged?.Invoke(state);
         }
-        public void DeleteSubscriber()
+        public void DeleteSubscriber(State state)
         {
-            this.state.Subscribers.RemoveAll(s => s.Name == this.state.searchData);
-            state.UpdateDataFile();
+            state.Subscribers.RemoveAll(s => s.Name == this.state.InputData);
+            SubscriberListChanged?.Invoke(state);
         }
-        public void DeleteAllSubscriber()
+        public void DeleteAllSubscriber(State state)
         {
-            this.state.Subscribers.RemoveAll(s => true);
-            this.state.UpdateDataFile();
+            state.Subscribers.RemoveAll(s => true);
+            SubscriberListChanged?.Invoke(state);
         }
         #endregion
 
         #region PhoneNumbers CRUD
-        public void AddNewPhoneNumber()
+        public void AddNewPhoneNumber(State state)
         {
             if (state.isNewPhoneNumberCorrect)
             {
-                this.state.SelectedSubscriber.PhoneNumberList.Add(this.state.newPhoneNumber);
+                state.SelectedSubscriber.PhoneNumberList.Add(this.state.newPhoneNumber);
             }
         }
         #endregion
-        public List<Subscriber> GetSuitableSubscriberList(string name)
-        {
-            return this.state.Subscribers.FindAll((s) => s.Name.Contains(name));
-        }
         public bool CheckNewPhoneNumber(string number)
         {
             return this.newPhoneNumberRegex.IsMatch(number);
@@ -67,6 +62,11 @@ namespace Task3
         {
             return instance ?? new PhoneBook(state);
         }
+        #endregion
+
+        #region Делегаты и события
+        public delegate void PhoneBookHandler(State state);
+        public event PhoneBookHandler SubscriberListChanged;
         #endregion
 
         #region Конструкторы

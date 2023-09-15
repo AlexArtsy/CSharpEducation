@@ -8,10 +8,12 @@ namespace Task3
 {
     internal class Screen
     {
+        public delegate void DoAction(State state);
         #region Поля
         #endregion
 
         #region Свойства
+        public DoAction Do { get; set; }
         public int XStartRenderingPosition { get; set; }
         public int YStartRenderingPosition { get; set; }
         public int Id { get; set; }
@@ -20,10 +22,17 @@ namespace Task3
         public bool IsSelected { get; set; }
         public ConsoleColor Color { get; set; }
         public ConsoleColor BackgroundColor { get; set; }
-        //  public List<Item> Items { get; set; }
         #endregion
 
         #region Методы
+        public void Clear()
+        {
+            Console.SetCursorPosition(this.XStartRenderingPosition, this.YStartRenderingPosition);
+            for (int i = 0; i < this.Height; i += 1)
+            {
+                Console.Write(new String(' ', this.Width));
+            }
+        }
         #endregion
 
         #region Конструкторы

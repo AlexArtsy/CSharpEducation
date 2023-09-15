@@ -36,15 +36,17 @@ namespace Task3
 
                     break;
                 case ConsoleKey.Enter:
-                    menu.SelectedItem.Do();
+                    menu.SelectedItem.Do(this.State);
                     break;
                 case ConsoleKey.Backspace:
-                    State.searchData = State.searchData.Length == 0 
+                    State.InputData = State.InputData.Length == 0 
                             ? "" 
-                            : State.searchData.Substring(0, State.searchData.Length - 1);
+                            : State.InputData.Substring(0, State.InputData.Length - 1);
+                    window.Areas.ForEach((a) => a.Do(this.State));
                     break;
                 default:
-                    State.searchData += pressedKey.KeyChar;
+                    State.InputData += pressedKey.KeyChar;
+                    window.Areas.ForEach((a) => a.Do(this.State));
                     break;
             }
         }

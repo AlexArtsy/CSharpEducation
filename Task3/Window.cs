@@ -21,12 +21,9 @@ namespace Task3
 
         public void Render()
         {
-            if (this.IsSelected)
-            {
-                this.Areas.ForEach((a) => a.Render());
-                this.Inputs.ForEach((i) => i.Render());
-                this.MenuList.ForEach((m) => m.Render(this.XStartRenderingPosition, this.YStartRenderingPosition));
-            }
+            this.MenuList.ForEach((m) => m.Render(this.XStartRenderingPosition, this.YStartRenderingPosition));
+            this.Areas.ForEach((a) => a.Render());
+            this.Inputs.ForEach((i) => i.Render(this.XStartRenderingPosition, this.YStartRenderingPosition));
         }
         #endregion
 

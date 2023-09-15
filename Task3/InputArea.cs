@@ -9,25 +9,37 @@ namespace Task3
     internal class InputArea : Item
     {
         #region Поля
-        public int id;
         #endregion
 
         #region Свойства
-        public string Value { get; set; }
+        public State State { get; set; }
         #endregion
 
         #region Методы
-        public void Render()
+        public void Render(int outerX, int outerY)
         {
+            this.Clear();
+            var x = outerX + this.XStartRenderingPosition;
+            var y = outerY + this.YStartRenderingPosition;
+            Console.SetCursorPosition(x, y);
+            Console.BackgroundColor = this.BackgroundColor;
+            Console.ForegroundColor = this.Color;
 
+            if (this.IsSelected)
+            {
+                Console.WriteLine(this.State.InputData);
+                //Console.BackgroundColor = ConsoleColor.White;
+                //Console.ForegroundColor = ConsoleColor.Black;
+            }
+            Console.ResetColor();
+            Console.SetCursorPosition(x + this.State.InputData.Length, y);
         }
         #endregion
 
         #region Конструкторы
-        public InputArea(int id, string value, int x, int y, int width) : base(id, value, x, y, width)
+        public InputArea(int id, State state, int x, int y, int width) : base(id, state.InputData, x, y, width)
         {
-            this.id = id;
-            this.Value = value;
+            this.State = state;
         }
         #endregion
     }

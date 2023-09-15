@@ -13,13 +13,19 @@ namespace Task3
         #endregion
 
         #region Свойства
-       // public string Value { get; set; }
+        public List<Item> List { get; set; }
         #endregion
 
         #region Методы
         public void Render()
         {
+            this.Clear();
+            RenderVerticalList(this.XStartRenderingPosition, this.YStartRenderingPosition, this.List);
+        }
 
+        public void UpdateList(State state)
+        {
+            this.List = state.SubscriberItemList.FindAll((item) => item.Value.Contains(state.InputData));
         }
         public void RenderVerticalList(int x, int y, List<Item> list)
         {
@@ -39,7 +45,7 @@ namespace Task3
             //    list.Add(new Item(i, s.Name, x, y + i, 50));
             //    i += 1;
             //});
-            int itemWidth = list.Max((l) => l.Name.Length) + 3;
+            int itemWidth = list.Max((l) => l.Value.Length) + 3;
             list.ForEach((l) =>
             {
                 l.Render(x + i * itemWidth, y);
@@ -52,6 +58,7 @@ namespace Task3
         public WindowArea(int id, int x, int y, int width, int height) : base(id, x, y, width, height)
         {
             this.id = id;
+            this.List = new List<Item>();
         }
         #endregion
     }
