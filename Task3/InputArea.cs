@@ -9,6 +9,7 @@ namespace Task3
     internal class InputArea : Item
     {
         #region Поля
+        public bool isCorrect = true;
         #endregion
 
         #region Свойства
@@ -23,6 +24,16 @@ namespace Task3
             var x = outerX + this.XStartRenderingPosition;
             var y = outerY + this.YStartRenderingPosition;
             Console.SetCursorPosition(x, y);
+
+            if (this.isCorrect)
+            {
+                this.BackgroundColor = ConsoleColor.Red;
+            }
+            else
+            {
+                this.BackgroundColor = ConsoleColor.Black;
+            }
+
             Console.BackgroundColor = this.BackgroundColor;
             Console.ForegroundColor = this.Color;
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Task3
@@ -13,21 +14,20 @@ namespace Task3
         #region Поля
         private string fileName = "phonebook.txt";
         public string path;
-        //public MainWindow mainWindow;
+        public readonly Regex newSubscriberRegex = new Regex(@"[а-яА-Яa-zA-Z]+");
+        public readonly Regex newPhoneNumberRegex = new Regex(@"\d+");
+
+       // public QuestionScreen deletAllSubscriberWindow = new QuestionScreen("Точно удалить всех пользователей? (Y/N)");
         //public EditWindow editWindow;
         public readonly Subscriber nullSubscriber = new Subscriber("_"); //  Заглушка на случай отсутствия абонента.
-
-        public bool isNewSubscriberNameCorrect = false;
-        public string newPhoneNumber = "";
-        public bool isNewPhoneNumberCorrect = false;
         #endregion
 
         #region Свойства
         public string InputData { get; set; }
         public Subscriber SelectedSubscriber { get; set; }
+        public string SelectedNumber { get; set; }
         public List<Subscriber> Subscribers { get; set; }
         public List<Subscriber> SuitableSubscribers { get; set; }
-        //public Window SelectedWindow { get; set; }
         #endregion
 
         #region Методы

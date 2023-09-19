@@ -24,8 +24,11 @@ namespace Task3
         }
         public void RenderCustomComponents(State state)
         {
-            Console.SetCursorPosition(3, 3);
+            Console.SetCursorPosition(5, 3);
             Console.Write($"Абонент: {state.SelectedSubscriber.Name}");
+
+            Console.SetCursorPosition(1, 5);
+            Console.Write("Новый номер:");
         }
 
         public void UpdatePhoneNumberList(State state)
@@ -34,9 +37,17 @@ namespace Task3
             var i = 0;
             state.SelectedSubscriber.PhoneNumberList.ForEach(n =>
             {
-                itemList.Add(new Item(i, n, this.XStartRenderingPosition, this.YStartRenderingPosition + i, this.Width));
+                var newItem = new Item(i, n, this.XStartRenderingPosition, this.YStartRenderingPosition + i,
+                    this.Width);
+                newItem.isSelected = state.SelectedNumber == newItem.Value;
+                itemList.Add(newItem);
                 i += 1;
             });
+            //if (itemList.Count == 1)
+            //{
+            //    state.SelectedNumber = itemList[0].Value;
+            //    itemList[0].isSelected = true;
+            //}
             this.Areas[0].List = itemList;
         }
         #endregion
@@ -47,8 +58,8 @@ namespace Task3
             string[] editMenuItems = { "Назад", "Добавить номер", "Изменить номер", "Удалить номер", "Удалить все" };
             Menu menu = new Menu(0, editMenuItems);
             this.MenuList.Add(menu);
-            this.Areas.Add(new WindowArea(0, 50, 5));
-            this.Inputs.Add(new InputArea(0,  50, 4));
+            this.Areas.Add(new WindowArea(0, 14, 6));
+            this.Inputs.Add(new InputArea(0,  14, 5));
             UpdatePhoneNumberList(state);
             this.Areas[0].isSelected = true;
             this.Inputs[0].isSelected = true;

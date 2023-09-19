@@ -24,12 +24,16 @@ namespace Task3
             this.xCenterCoordinate = this.Width - this.question.Length / 2;
             this.yCenterCoordinate = this.Height / 2;
         }
-        public string Render()
+        public bool Render()
         {
             Console.Clear();
             Console.SetCursorPosition(this.xCenterCoordinate, this.yCenterCoordinate);
             Console.Write(question + " ");
-            return Console.ReadLine();
+            return CheckAnswer(Console.ReadLine());
+        }
+        private bool CheckAnswer(string answer)
+        {
+            return answer == "Y" || answer == "y";
         }
         #endregion
 

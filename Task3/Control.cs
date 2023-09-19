@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -32,6 +33,7 @@ namespace Task3
                 }
                 if (EditWindow.isSelected)
                 {
+                    SetSelectedNumber();
                     EditWindow.RenderWindow(state);
                 }
             }
@@ -41,11 +43,27 @@ namespace Task3
             if (MainWindow.isSelected)
             {
                 State.InputData = this.MainWindow.SelectedInputArea.Value;
+                if (!State.newSubscriberRegex.IsMatch(State.InputData))
+                {
+                    this.MainWindow.Inputs[0].isCorrect = true;
+                }
+                else
+                {
+                    this.MainWindow.Inputs[0].isCorrect = false;
+                }
                 return;
             }
             if (EditWindow.isSelected)
             {
                 State.InputData = this.EditWindow.SelectedInputArea.Value;
+                if (!State.newPhoneNumberRegex.IsMatch(State.InputData))
+                {
+                    this.EditWindow.Inputs[0].isCorrect = true;
+                }
+                else
+                {
+                    this.EditWindow.Inputs[0].isCorrect = false;
+                }
                 return;
             }
         }
@@ -75,18 +93,15 @@ namespace Task3
         public void SetSuitableSubscribers()
         {
             State.SuitableSubscribers = State.Subscribers.FindAll(s => s.Name.Contains(State.InputData));
-        }
+        } 
         public void UpdateSubscriberList()
         {
             this.MainWindow.UpdateSubscriberList(State);
         }
         public void UpdatePhoneNumberList()
         {
-            if (MainWindow.isSelected)
-            {
-                this.MainWindow.UpdatePhoneNumberList(State);
-                return;
-            }
+            this.MainWindow.UpdatePhoneNumberList(State);   // Нужно обновлять в обоих случаях, т.к. при возврате на главную страницу список номеров не обновлялся.
+            
             if (EditWindow.isSelected)
             {
                 this.EditWindow.UpdatePhoneNumberList(State);
@@ -104,6 +119,41 @@ namespace Task3
                 State.SelectedSubscriber = State.nullSubscriber;
             }
         }
+        public void SetSelectedNumber()
+        {
+            if (State.SelectedSubscriber.PhoneNumberList.Count > 0)
+            {
+                State.SelectedNumber = State.SelectedSubscriber.PhoneNumberList[0];
+            }
+            else
+            {
+                State.SelectedNumber = "";
+            }
+        }
+        public void ShiftUpSelectedNumber()
+        {
+            if (State.SelectedSubscriber.PhoneNumberList.Count == 0)
+            {
+                return;
+            }
+            var itemList = this.EditWindow.Areas[0].List;
+            var selectedId = itemList.Find(l => l.isSelected).Id;
+            var newId = selectedId == 0 ? itemList.Count - 1 : selectedId - 1;
+            var number = itemList.Find(l => l.Id == newId).Value;
+            State.SelectedNumber = itemList.Find(s => s.Value == number).Value;
+        }
+        public void ShiftDownSelectedNumber()
+        {
+            if (State.SelectedSubscriber.PhoneNumberList.Count == 0)
+            {
+                return;
+            }
+            var itemList = this.EditWindow.Areas[0].List;
+            var selectedId = itemList.Find(l => l.isSelected).Id;
+            var newId = selectedId == itemList.Count - 1 ? 0 : selectedId + 1;
+            var number = itemList.Find(l => l.Id == newId).Value;
+            State.SelectedNumber = itemList.Find(s => s.Value == number).Value;
+        }
         public void ShiftUpSelectedSubscriber()
         {
             var itemList = this.MainWindow.Areas[0].List;
@@ -111,9 +161,26 @@ namespace Task3
             var newId = selectedId == 0 ? itemList.Count - 1 : selectedId - 1;
             var name = itemList.Find(l => l.Id == newId).Value;
             State.SelectedSubscriber = State.Subscribers.Find(s => s.Name == name);
-
-            
-            this.MainWindow.UpdatePhoneNumberList(this.State);
+        }
+        public void ShiftDownSelectedSubscriber()
+        {
+            var itemList = this.MainWindow.Areas[0].List;
+            var selectedId = itemList.Find(l => l.isSelected).Id;
+            var newId = selectedId == itemList.Count - 1 ? 0 : selectedId + 1;
+            var name = itemList.Find(l => l.Id == newId).Value;
+            State.SelectedSubscriber = State.Subscribers.Find(s => s.Name == name);
+        }
+        public void UpdateMainWindowAreas()
+        {
+            UpdateSubscriberList();
+            this.MainWindow.UpdateArea();
+            UpdatePhoneNumberList();
+            this.MainWindow.UpdateArea();
+        }
+        public void UpdateEditWindowAreas()
+        {
+            UpdatePhoneNumberList();
+            this.EditWindow.UpdateArea();
         }
         #endregion
 
@@ -127,53 +194,58 @@ namespace Task3
             this.MainWindow.BackspacePressed += SetInputData;
             this.MainWindow.BackspacePressed += SetSuitableSubscribers;
             this.MainWindow.BackspacePressed += SetSelectedSubscriber;
-            this.MainWindow.BackspacePressed += UpdateSubscriberList;
-            this.MainWindow.BackspacePressed += this.MainWindow.UpdateArea;
-            this.MainWindow.BackspacePressed += UpdatePhoneNumberList;
-            this.MainWindow.BackspacePressed += this.MainWindow.UpdateArea;
+            this.MainWindow.BackspacePressed += UpdateMainWindowAreas;
 
             this.MainWindow.EnyKeyPressed += SetInputData;
             this.MainWindow.EnyKeyPressed += SetSuitableSubscribers;
             this.MainWindow.EnyKeyPressed += SetSelectedSubscriber;
-            this.MainWindow.EnyKeyPressed += UpdateSubscriberList;
-            this.MainWindow.EnyKeyPressed += this.MainWindow.UpdateArea;
-            this.MainWindow.EnyKeyPressed += UpdatePhoneNumberList;
-            this.MainWindow.EnyKeyPressed += this.MainWindow.UpdateArea;
+            this.MainWindow.EnyKeyPressed += UpdateMainWindowAreas;
 
             this.MainWindow.UpArrowPressed += ShiftUpSelectedSubscriber;
-            this.MainWindow.UpArrowPressed += UpdateSubscriberList;
-            this.MainWindow.UpArrowPressed += this.MainWindow.UpdateArea;
-            this.MainWindow.UpArrowPressed += UpdatePhoneNumberList;
-            this.MainWindow.UpArrowPressed += this.MainWindow.UpdateArea;
+            this.MainWindow.UpArrowPressed += UpdateMainWindowAreas;
+
+            this.MainWindow.DownArrowPressed += ShiftDownSelectedSubscriber;
+            this.MainWindow.DownArrowPressed += UpdateMainWindowAreas;
 
             this.MainWindow.EnterPressed += DoMenuAction;
             this.MainWindow.TabPressed += SwitchWindows;
 
-            this.MainWindow.MenuList[0].Items[0].Do = phoneBook.AddNewSubscriber;
+            this.MainWindow.MenuList[0].Items[0].Do += phoneBook.AddNewSubscriber;
             this.MainWindow.MenuList[0].Items[1].Do = SwitchWindows;
             this.MainWindow.MenuList[0].Items[2].Do = phoneBook.DeleteSubscriber;
+            this.MainWindow.MenuList[0].Items[3].Do = phoneBook.DeleteAllSubscriber;
 
             this.EditWindow.BackspacePressed += SetInputData;
-            this.EditWindow.BackspacePressed += UpdatePhoneNumberList;
-            this.EditWindow.BackspacePressed += this.EditWindow.UpdateArea;
+            //this.EditWindow.BackspacePressed += SetSelectedNumber;
 
             this.EditWindow.EnyKeyPressed += SetInputData;
-            this.EditWindow.EnyKeyPressed += UpdatePhoneNumberList;
-            this.EditWindow.EnyKeyPressed += this.EditWindow.UpdateArea;
+            //this.EditWindow.EnyKeyPressed += SetSelectedNumber;
+
+            this.EditWindow.UpArrowPressed += ShiftUpSelectedNumber;
+            this.EditWindow.UpArrowPressed += UpdateEditWindowAreas;
+
+            this.EditWindow.DownArrowPressed += ShiftDownSelectedNumber;
+            this.EditWindow.DownArrowPressed += UpdateEditWindowAreas;
 
             this.EditWindow.EnterPressed += DoMenuAction;
             this.EditWindow.TabPressed += SwitchWindows;
 
             this.EditWindow.MenuList[0].Items[0].Do = SwitchWindows;
             this.EditWindow.MenuList[0].Items[1].Do = phoneBook.AddNewPhoneNumber;
-            this.EditWindow.MenuList[0].Items[2].Do = SwitchWindows;
-            this.EditWindow.MenuList[0].Items[3].Do = SwitchWindows;
-            this.EditWindow.MenuList[0].Items[4].Do = SwitchWindows;
+            this.EditWindow.MenuList[0].Items[2].Do = phoneBook.EditPhoneNumber;
+            this.EditWindow.MenuList[0].Items[3].Do = phoneBook.DeletePhoneNumber;
+            this.EditWindow.MenuList[0].Items[4].Do = phoneBook.DeleteAllPhoneNumber;
 
             phoneBook.SubscriberListChanged += UpdateDataFile;
+            phoneBook.SubscriberListChanged += SetSuitableSubscribers;
+            phoneBook.SubscriberListChanged += SetSelectedSubscriber;
+            phoneBook.SubscriberListChanged += UpdateMainWindowAreas;
+
             phoneBook.PhoneNumberListChanged += UpdateDataFile;
+            phoneBook.PhoneNumberListChanged += SetSelectedNumber;
             phoneBook.PhoneNumberListChanged += UpdatePhoneNumberList;
             phoneBook.PhoneNumberListChanged += EditWindow.UpdateArea;
+            //phoneBook.PhoneNumberListChanged += MainWindow.UpdatePhoneNumberList();
         }
         #endregion
     }

@@ -17,8 +17,6 @@ namespace Task3
         #region Поля
         private readonly State state;
         private static PhoneBook instance;
-        private readonly Regex newSubscriberRegex = new Regex(@"\d+");
-        private readonly Regex newPhoneNumberRegex = new Regex(@"\d+");
         #endregion
 
         #region Свойства
@@ -35,12 +33,12 @@ namespace Task3
         }
         public void DeleteSubscriber()
         {
-            state.Subscribers.RemoveAll(s => s.Name == this.state.InputData);
+            state.Subscribers.RemoveAll(s => s.Name == this.state.SelectedSubscriber.Name); 
             SubscriberListChanged?.Invoke();
         }
         public void DeleteAllSubscriber()
         {
-            state.Subscribers.RemoveAll(s => true);
+            state.Subscribers.Clear();
             SubscriberListChanged?.Invoke();
         }
         #endregion
@@ -48,17 +46,32 @@ namespace Task3
         #region PhoneNumbers CRUD
         public void AddNewPhoneNumber()
         {
-            //if (state.isNewPhoneNumberCorrect)
-            //{
-            //    state.SelectedSubscriber.PhoneNumberList.Add(state.InputData);
-            //}
-            state.SelectedSubscriber.PhoneNumberList.Add(state.InputData);
+            if (CheckNewPhoneNumber(state.InputData))
+            {
+                state.SelectedSubscriber.PhoneNumberList.Add(state.InputData);
+                PhoneNumberListChanged?.Invoke();
+            }
+        }
+        public void DeletePhoneNumber()
+        {
+            state.SelectedSubscriber.PhoneNumberList.RemoveAll(n => n == state.SelectedNumber);
+            PhoneNumberListChanged?.Invoke();
+        }
+        public void DeleteAllPhoneNumber()
+        {
+            state.SelectedSubscriber.PhoneNumberList.Clear();
+            PhoneNumberListChanged?.Invoke();
+        }
+        public void EditPhoneNumber()
+        {
+            var index = state.SelectedSubscriber.PhoneNumberList.IndexOf(state.SelectedNumber);
+            state.SelectedSubscriber.PhoneNumberList[index] = state.InputData;
             PhoneNumberListChanged?.Invoke();
         }
         #endregion
         public bool CheckNewPhoneNumber(string number)
         {
-            return this.newPhoneNumberRegex.IsMatch(number);
+            return state.newPhoneNumberRegex.IsMatch(number);
         }
         public static PhoneBook GetInstance(State state)
         {

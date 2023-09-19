@@ -20,12 +20,7 @@ namespace Task3
         public void Render(int outerX, int outerY)
         {
             this.Clear();
-            //UpdateList();
             RenderVerticalList(outerX, outerY);
-        }
-        public void UpdateList()
-        {
-            
         }
         public void RenderVerticalList(int outerX, int outerY)
         {
