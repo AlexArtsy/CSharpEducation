@@ -17,9 +17,16 @@ namespace Task3
         #region Поля
         private readonly State state;
         private static PhoneBook instance;
+        private string[] messages =
+        {
+            "",
+            "Такой абонент уже есть в книге",
+            "Некорректный номер телефона",
+        };
         #endregion
 
         #region Свойства
+        public PhoneBookMessageHandler PrintMessage { get; set; }
         #endregion
 
         #region Методы
@@ -27,6 +34,8 @@ namespace Task3
         #region Subscribers CRUD
         public void AddNewSubscriber()
         {
+            if (!CheckNewSubscriberName(state.InputData)) return;
+
             state.Subscribers.Add(new Subscriber(state.InputData));
             state.Subscribers.Sort((a, b) => string.Compare(a.Name, b.Name));
             SubscriberListChanged?.Invoke();
@@ -69,9 +78,38 @@ namespace Task3
             PhoneNumberListChanged?.Invoke();
         }
         #endregion
-        public bool CheckNewPhoneNumber(string number)
+
+        private bool IsEmpty(string value)
         {
+            return value.Length == 0;
+        }
+        private bool CheckNewPhoneNumber(string number)
+        {
+            if (IsEmpty(number))
+            {
+                PrintMessage("AHTUNG!!!!");
+                return false;
+            }
+            if(state.SelectedSubscriber.PhoneNumberList.Contains(state.InputData))
+            {
+                return false;
+            }
             return state.newPhoneNumberRegex.IsMatch(number);
+        }
+        private bool CheckNewSubscriberName(string name)
+        {
+            if (IsEmpty(name))
+            {
+                return false;
+            }
+
+            if (state.Subscribers.Contains(state.Subscribers.Find(s => s.Name == state.InputData)))
+            {
+                PrintMessage(messages[1]);
+                return false;
+            }
+            
+            return state.newSubscriberRegex.IsMatch(name);
         }
         public static PhoneBook GetInstance(State state)
         {
@@ -83,6 +121,8 @@ namespace Task3
         public delegate void PhoneBookHandler();
         public event PhoneBookHandler SubscriberListChanged;
         public event PhoneBookHandler PhoneNumberListChanged;
+
+        public delegate void PhoneBookMessageHandler(String message);
         #endregion
 
         #region Конструкторы

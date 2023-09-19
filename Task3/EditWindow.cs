@@ -59,6 +59,7 @@ namespace Task3
             this.Inputs[0].isSelected = true;
             this.MenuList[0].isSelected = true;
             this.MenuList[0].Items[0].isSelected = true;
+            this.SelectedInputArea = this.Inputs[0];
         }
         #endregion
     }

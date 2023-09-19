@@ -8,9 +8,6 @@ namespace Task3
 {
     internal class Window : Screen
     {
-        #region Поля
-        #endregion
-
         #region Свойства
         public List<Menu> MenuList { get; set; }
         public Menu SelectedMenu { get; set; }
@@ -21,10 +18,9 @@ namespace Task3
         #endregion
 
         #region Методы
-
         public void Render(State state)
         {
-            UpdateSelectedElements(state);
+            UpdateSelectedElements();
             RenderMenu();
             RenderArea();
             RenderInput();
@@ -39,7 +35,7 @@ namespace Task3
             var selectedInput = this.Inputs.Find(i => i.isSelected);
             Console.SetCursorPosition(selectedInput.currentX, selectedInput.currentY);
         }
-        public void UpdateSelectedElements(State state)
+        public void UpdateSelectedElements()
         {
             this.SelectedMenu = this.MenuList.Find(m => m.isSelected);
             this.SelectedWindowArea = this.Areas.Find(a => a.isSelected);
@@ -72,6 +68,22 @@ namespace Task3
             this.SelectedInputArea.Render(this.XStartRenderingPosition, this.YStartRenderingPosition);
             SetCursorPosition();
         }
+
+        public void ShowMessage(string message)
+        {
+            ClearMessageArea();
+            Console.SetCursorPosition(3, 2);
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.Write(message + "!!!");
+            Console.ResetColor();
+            SetCursorPosition();
+        }
+        public void ClearMessageArea()
+        {
+            Console.SetCursorPosition(3, 2);
+            Console.Write(new String(' ', this.Width - 3));
+        }
+
         public void KeyEventListener(State state)
         {
             var pressedKey = Console.ReadKey(true);
@@ -90,11 +102,9 @@ namespace Task3
                     RenderMenu();
                     break;
                 case ConsoleKey.UpArrow:
-                    //RenderArea();
                     UpArrowPressed?.Invoke();
                     break;
                 case ConsoleKey.DownArrow:
-                    //RenderArea();
                     DownArrowPressed?.Invoke();
                     break;
                 case ConsoleKey.Enter:
@@ -106,13 +116,11 @@ namespace Task3
                         : input.Substring(0, input.Length - 1);
                     BackspacePressed?.Invoke();
                     UpdateInput();
-                    //UpdateArea();
                     break;
                 default:
                     this.SelectedInputArea.Value += pressedKey.KeyChar;
                     EnyKeyPressed?.Invoke();
                     UpdateInput();
-                    //UpdateArea();
                     break;
             }
         }

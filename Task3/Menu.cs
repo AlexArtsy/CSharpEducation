@@ -11,9 +11,6 @@ namespace Task3
 {
     internal class Menu : Screen
     {
-        #region Поля
-        #endregion
-
         #region Свойства
         public List<Item> Items { get; set; }
         public Item SelectedItem { get; set; }

@@ -40,6 +40,11 @@ namespace Task3
         }
         public void SwitchWindows()
         {
+            if (State.SelectedSubscriber.Name == "_")
+            {
+                this.MainWindow.ShowMessage("Сперва нужно выбрать абонента");
+                return;
+            }
             this.MainWindow.isSelected = !this.MainWindow.isSelected;
             this.EditWindow.isSelected = !this.EditWindow.isSelected;
         }
@@ -48,27 +53,13 @@ namespace Task3
             if (MainWindow.isSelected)
             {
                 State.InputData = this.MainWindow.SelectedInputArea.Value;
-                if (!State.newSubscriberRegex.IsMatch(State.InputData))
-                {
-                    this.MainWindow.Inputs[0].isCorrect = true;
-                }
-                else
-                {
-                    this.MainWindow.Inputs[0].isCorrect = false;
-                }
+                this.MainWindow.Inputs[0].isCorrect = !State.newSubscriberRegex.IsMatch(State.InputData);
                 return;
             }
             if (EditWindow.isSelected)
             {
                 State.InputData = this.EditWindow.SelectedInputArea.Value;
-                if (!State.newPhoneNumberRegex.IsMatch(State.InputData))
-                {
-                    this.EditWindow.Inputs[0].isCorrect = true;
-                }
-                else
-                {
-                    this.EditWindow.Inputs[0].isCorrect = false;
-                }
+                this.EditWindow.Inputs[0].isCorrect = !State.newPhoneNumberRegex.IsMatch(State.InputData);
                 return;
             }
         }
@@ -144,7 +135,7 @@ namespace Task3
         }
         public void ShiftUpSelectedSubscriber()
         {
-            if (this.State.Subscribers.Count > 0)
+            if (this.MainWindow.Areas[0].List.Count > 0)
             {
                 var itemList = this.MainWindow.Areas[0].List;
                 var selectedId = itemList.Find(l => l.isSelected).Id;
@@ -155,7 +146,7 @@ namespace Task3
         }
         public void ShiftDownSelectedSubscriber()
         {
-            if (this.State.Subscribers.Count > 0)
+            if(this.MainWindow.Areas[0].List.Count > 0)
             {
                 var itemList = this.MainWindow.Areas[0].List;
                 var selectedId = itemList.Find(l => l.isSelected).Id;
@@ -177,17 +168,41 @@ namespace Task3
             this.EditWindow.UpdateArea();
         }
 
+        private void PrintMessage(string message)
+        {
+            if (MainWindow.isSelected)
+            {
+                MainWindow.ShowMessage(message);
+            }
+            if (EditWindow.isSelected)
+            {
+                EditWindow.ShowMessage(message);
+            }
+        }
+        private void ClearMessage()
+        {
+            if (MainWindow.isSelected)
+            {
+                MainWindow.ClearMessageArea();
+            }
+            if (EditWindow.isSelected)
+            {
+                EditWindow.ClearMessageArea();
+            }
+        }
         private void InitMainWindowKeyEvents()
         {
             this.MainWindow.BackspacePressed += SetInputData;
             this.MainWindow.BackspacePressed += SetSuitableSubscribers;
             this.MainWindow.BackspacePressed += SetSelectedSubscriber;
             this.MainWindow.BackspacePressed += UpdateMainWindowAreas;
+            this.MainWindow.BackspacePressed += ClearMessage;
 
             this.MainWindow.EnyKeyPressed += SetInputData;
             this.MainWindow.EnyKeyPressed += SetSuitableSubscribers;
             this.MainWindow.EnyKeyPressed += SetSelectedSubscriber;
             this.MainWindow.EnyKeyPressed += UpdateMainWindowAreas;
+            this.MainWindow.EnyKeyPressed += ClearMessage;
 
             this.MainWindow.UpArrowPressed += ShiftUpSelectedSubscriber;
             this.MainWindow.UpArrowPressed += UpdateMainWindowAreas;
@@ -201,7 +216,9 @@ namespace Task3
         private void InitEditWindowKeyEvents()
         {
             this.EditWindow.BackspacePressed += SetInputData;
+            this.EditWindow.BackspacePressed += ClearMessage;
             this.EditWindow.EnyKeyPressed += SetInputData;
+            this.EditWindow.EnyKeyPressed += ClearMessage;
 
             this.EditWindow.UpArrowPressed += ShiftUpSelectedNumber;
             this.EditWindow.UpArrowPressed += UpdateEditWindowAreas;
@@ -210,18 +227,20 @@ namespace Task3
             this.EditWindow.DownArrowPressed += UpdateEditWindowAreas;
 
             this.EditWindow.EnterPressed += DoMenuAction;
-            this.EditWindow.TabPressed += SwitchWindows;
+            this.EditWindow.EnterPressed += SetInputData;
         }
         private void InitMainWindowMenuEvents(PhoneBook book)
         {
-            this.MainWindow.MenuList[0].Items[0].Do += book.AddNewSubscriber;
+            this.MainWindow.MenuList[0].Items[0].Do = book.AddNewSubscriber;
             this.MainWindow.MenuList[0].Items[1].Do = SwitchWindows;
+            this.MainWindow.MenuList[0].Items[1].Do += SetInputData;
             this.MainWindow.MenuList[0].Items[2].Do = book.DeleteSubscriber;
             this.MainWindow.MenuList[0].Items[3].Do = book.DeleteAllSubscriber;
         }
         private void InitEditWindowMenuEvents(PhoneBook book)
         {
             this.EditWindow.MenuList[0].Items[0].Do = SwitchWindows;
+            this.EditWindow.MenuList[0].Items[0].Do += SetInputData;
             this.EditWindow.MenuList[0].Items[1].Do = book.AddNewPhoneNumber;
             this.EditWindow.MenuList[0].Items[2].Do = book.EditPhoneNumber;
             this.EditWindow.MenuList[0].Items[3].Do = book.DeletePhoneNumber;
@@ -247,6 +266,8 @@ namespace Task3
             this.State = state;
             this.MainWindow = mainWindow;
             this.EditWindow = editWindow;
+
+            phoneBook.PrintMessage = PrintMessage;
 
             InitMainWindowKeyEvents();
             InitEditWindowKeyEvents();

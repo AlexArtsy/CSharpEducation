@@ -24,13 +24,16 @@ namespace Task3
         }
         public void RenderCustomComponents()
         {
-
+            Console.SetCursorPosition(3, 3);
+            Console.Write("Поиск: ");
+            Console.SetCursorPosition(42, 3);
+            Console.Write("Номера телефонов: ");
         }
         public void UpdateSelectedAreas(WindowArea area, State state)
         {
             this.Areas.ForEach(a => a.isSelected = false);
             area.isSelected = true;
-            this.UpdateSelectedElements(state);
+            this.UpdateSelectedElements();
         }
         public void UpdateSubscriberList(State state)
         {
@@ -69,9 +72,9 @@ namespace Task3
             Menu menu = new Menu(0, mainMenuItems);
             menu.isSelected = true;
             this.MenuList.Add(menu);
-            this.Areas.Add(new WindowArea(0, 3, 4));
-            this.Areas.Add(new WindowArea(1, 50, 4));
-            this.Inputs.Add(new InputArea(0, 3,3));
+            this.Areas.Add(new WindowArea(0, 10, 4));
+            this.Areas.Add(new WindowArea(1, 60, 3));
+            this.Inputs.Add(new InputArea(0, 10,3));
             this.Areas[0].isSelected = true;
             this.Areas[1].isSelected = true;
             this.Inputs[0].isSelected = true;

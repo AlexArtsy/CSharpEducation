@@ -12,14 +12,9 @@ namespace Task3
         public bool isCorrect = true;
         #endregion
 
-        #region Свойства
-        public State State { get; set; }
-        #endregion
-
         #region Методы
         public void Render(int outerX, int outerY)
         {
-            //this.State.InputData = this.Value; //   перенести!
             this.Clear();
             var x = outerX + this.XStartRenderingPosition;
             var y = outerY + this.YStartRenderingPosition;
@@ -40,8 +35,6 @@ namespace Task3
             if (this.isSelected)
             {
                 Console.WriteLine(this.Value);
-                //Console.BackgroundColor = ConsoleColor.White;
-                //Console.ForegroundColor = ConsoleColor.Black;
             }
             Console.ResetColor();
             Console.SetCursorPosition(x + this.Value.Length, y);

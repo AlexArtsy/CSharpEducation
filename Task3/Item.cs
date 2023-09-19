@@ -8,13 +8,8 @@ namespace Task3
 {
     internal class Item : Screen
     {
-        //public delegate void DoAction(State state);
-        #region Поля
-        #endregion
-
         #region Свойства
         public string Value { get; set; }
-       // public DoAction Do { get; set; }
         #endregion
 
         #region Методы

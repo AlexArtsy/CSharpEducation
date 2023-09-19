@@ -14,11 +14,9 @@ namespace Task3
         #region Поля
         private string fileName = "phonebook.txt";
         public string path;
-        public readonly Regex newSubscriberRegex = new Regex(@"[а-яА-Яa-zA-Z]+");
-        public readonly Regex newPhoneNumberRegex = new Regex(@"\d+");
-
-       // public QuestionScreen deletAllSubscriberWindow = new QuestionScreen("Точно удалить всех пользователей? (Y/N)");
-        //public EditWindow editWindow;
+        public readonly Regex newSubscriberRegex = new Regex(@"^([a-zа-яё]+)$");
+        public readonly Regex newPhoneNumberRegex = new Regex(@"^[0-9 ]+$");
+ 
         public readonly Subscriber nullSubscriber = new Subscriber("_"); //  Заглушка на случай отсутствия абонента.
         #endregion
 
@@ -53,14 +51,8 @@ namespace Task3
             this.Subscribers = InitSubscriberList();
             this.SuitableSubscribers = this.Subscribers;
             this.InputData = "";
-            if (this.Subscribers.Count > 0)
-            {
-                this.SelectedSubscriber = this.Subscribers[0];
-            }
-            else
-            {
-                this.SelectedSubscriber = nullSubscriber;
-            }
+
+            this.SelectedSubscriber = this.Subscribers.Count > 0 ? this.Subscribers[0] : this.nullSubscriber;
         }
         #endregion
     }
