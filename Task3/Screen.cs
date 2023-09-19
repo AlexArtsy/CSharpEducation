@@ -8,8 +8,10 @@ namespace Task3
 {
     internal class Screen
     {
-        public delegate void DoAction(State state);
         #region Поля
+        public bool isSelected = false;
+        public int currentX;
+        public int currentY;
         #endregion
 
         #region Свойства
@@ -19,7 +21,6 @@ namespace Task3
         public int Id { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public bool IsSelected { get; set; }
         public ConsoleColor Color { get; set; }
         public ConsoleColor BackgroundColor { get; set; }
         #endregion
@@ -27,14 +28,18 @@ namespace Task3
         #region Методы
         public void Clear()
         {
-            Console.SetCursorPosition(this.XStartRenderingPosition, this.YStartRenderingPosition);
+            var height = this.Height < Console.WindowHeight ? this.Height : Console.WindowHeight;
             for (int i = 0; i < this.Height; i += 1)
             {
+                Console.SetCursorPosition(this.XStartRenderingPosition, this.YStartRenderingPosition + i);
                 Console.Write(new String(' ', this.Width));
             }
         }
         #endregion
 
+        #region Делегаты и события
+        public delegate void DoAction();
+        #endregion
         #region Конструкторы
         public Screen(int id, int x, int y, int width, int height)
         {
@@ -43,7 +48,6 @@ namespace Task3
             this.YStartRenderingPosition = y;
             this.Width = width;
             this.Height = height;
-            this.IsSelected = false;
             this.BackgroundColor = ConsoleColor.Black;
             this.Color = ConsoleColor.White;
         }

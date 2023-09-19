@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Task3
 {
-    internal class Menu
+    internal class Menu : Screen
     {
         #region Поля
         #endregion
@@ -22,9 +22,9 @@ namespace Task3
         #region Методы
         public void SetItem(int id)
         {
-            this.SelectedItem.IsSelected = false;
+            this.SelectedItem.isSelected = false;
             this.SelectedItem = this.Items[id];
-            this.SelectedItem.IsSelected = true;
+            this.SelectedItem.isSelected = true;
         }
         public void SelectItemLeft()
         {
@@ -38,24 +38,29 @@ namespace Task3
         }
         public void Render(int outerX, int outerY)
         {
+            this.Clear();
             this.Items.ForEach((item) => item.Render(outerX, outerY));
         }
         #endregion
 
         #region Конструкторы
-        public Menu(string[] itemsNames)
+
+        public Menu(int id, string[] itemsNames) : base(id, 0, 0, Console.WindowWidth, 1)
         {
             this.Items = new List<Item>();
-            int itemWidth = itemsNames.OrderByDescending(n => n.Length).First().Length + 3;
-
+            var xStartPosition = 0;
             for (int i = 0; i < itemsNames.Length; i += 1)
             {
-                this.Items.Add(new Item(i, itemsNames[i],  1 + i * itemWidth, 0, itemWidth));
+                var width = itemsNames[i].Length + 3;
+                this.Items.Add(new Item(i, itemsNames[i], xStartPosition, 0, width));
+                xStartPosition += width;
             }
+
             this.SelectedItem = Items[0];
             SetItem(0);
 
         }
+
         #endregion
     }
 }

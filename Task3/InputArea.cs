@@ -18,6 +18,7 @@ namespace Task3
         #region Методы
         public void Render(int outerX, int outerY)
         {
+            //this.State.InputData = this.Value; //   перенести!
             this.Clear();
             var x = outerX + this.XStartRenderingPosition;
             var y = outerY + this.YStartRenderingPosition;
@@ -25,21 +26,27 @@ namespace Task3
             Console.BackgroundColor = this.BackgroundColor;
             Console.ForegroundColor = this.Color;
 
-            if (this.IsSelected)
+            if (this.isSelected)
             {
-                Console.WriteLine(this.State.InputData);
+                Console.WriteLine(this.Value);
                 //Console.BackgroundColor = ConsoleColor.White;
                 //Console.ForegroundColor = ConsoleColor.Black;
             }
             Console.ResetColor();
-            Console.SetCursorPosition(x + this.State.InputData.Length, y);
+            Console.SetCursorPosition(x + this.Value.Length, y);
+            UpdateCurrentCursorPosition();
+        }
+        public void UpdateCurrentCursorPosition()
+        {
+            this.currentX = Console.CursorLeft;
+            this.currentY = Console.CursorTop;
         }
         #endregion
 
         #region Конструкторы
-        public InputArea(int id, State state, int x, int y, int width) : base(id, state.InputData, x, y, width)
+        public InputArea(int id, int x, int y, int width = 30) : base(id, "", x, y, width)
         {
-            this.State = state;
+            
         }
         #endregion
     }

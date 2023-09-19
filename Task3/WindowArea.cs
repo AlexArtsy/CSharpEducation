@@ -17,45 +17,34 @@ namespace Task3
         #endregion
 
         #region Методы
-        public void Render()
+        public void Render(int outerX, int outerY)
         {
             this.Clear();
-            RenderVerticalList(this.XStartRenderingPosition, this.YStartRenderingPosition, this.List);
+            //UpdateList();
+            RenderVerticalList(outerX, outerY);
         }
-
-        public void UpdateList(State state)
+        public void UpdateList()
         {
-            this.List = state.SubscriberItemList.FindAll((item) => item.Value.Contains(state.InputData));
+            
         }
-        public void RenderVerticalList(int x, int y, List<Item> list)
+        public void RenderVerticalList(int outerX, int outerY)
         {
             var i = 0;
-            list.ForEach((l) =>
+            this.List.ForEach((l) =>
             {
-                l.Render(x, y + i);
-                i += 1;
-            });
-        }
-        public void RenderHorizontalList(int x, int y, List<Item> list)
-        {
-            int i = 0;
-            //var list = new List<Item>();
-            //subscribers.ForEach((s) =>
-            //{
-            //    list.Add(new Item(i, s.Name, x, y + i, 50));
-            //    i += 1;
-            //});
-            int itemWidth = list.Max((l) => l.Value.Length) + 3;
-            list.ForEach((l) =>
-            {
-                l.Render(x + i * itemWidth, y);
+                l.Render(this.XStartRenderingPosition + outerX, this.YStartRenderingPosition + outerY);
                 i += 1;
             });
         }
         #endregion
 
+        #region Делегаты и события
+        public delegate void WindowsAreaHandler(State state);
+        public event WindowsAreaHandler ListUpdated;
+        #endregion
+
         #region Конструкторы
-        public WindowArea(int id, int x, int y, int width, int height) : base(id, x, y, width, height)
+        public WindowArea(int id, int x, int y, int width = 30, int height = 20) : base(id, x, y, width, height)
         {
             this.id = id;
             this.List = new List<Item>();

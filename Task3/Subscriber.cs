@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +14,6 @@ namespace Task3
         #endregion
 
         #region Свойства
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public List<string> PhoneNumberList { get; set; }
         #endregion
@@ -21,16 +22,13 @@ namespace Task3
 
         public bool AddPhoneNumber(string phoneNumber)
         {
-            if (this.PhoneNumberList.Contains(phoneNumber))
-            {
-                return false;
-            }
             this.PhoneNumberList.Add(phoneNumber);
             return true;
         }
         public bool DeletePhoneNumber(string phoneNumber)
         {
-            return this.PhoneNumberList.Remove(phoneNumber);
+            //return this.PhoneNumberList.Remove(phoneNumber);
+            return true;
         }
 
         #endregion
@@ -41,9 +39,7 @@ namespace Task3
         public Subscriber(string name, string phoneNumber)
         {
             PhoneNumberList = new List<string>();
-            this.Id = Guid.NewGuid();
             this.Name = name;
-            this.PhoneNumberList.Add(phoneNumber);
         }
         #endregion
     }

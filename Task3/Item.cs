@@ -13,7 +13,6 @@ namespace Task3
         #endregion
 
         #region Свойства
-        public bool IsSelected { get; set; }
         public string Value { get; set; }
        // public DoAction Do { get; set; }
         #endregion
@@ -25,7 +24,7 @@ namespace Task3
             Console.BackgroundColor = this.BackgroundColor;
             Console.ForegroundColor = this.Color;
 
-            if (this.IsSelected)
+            if (this.isSelected)
             {
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.Black;
@@ -40,7 +39,6 @@ namespace Task3
         public Item(int id,string value, int x, int y, int width) : base(id, x, y, width, 1)
         {
             this.Value = value;
-            this.IsSelected = false;
         }
         #endregion
     }

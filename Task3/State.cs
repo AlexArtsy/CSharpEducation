@@ -12,10 +12,10 @@ namespace Task3
     {
         #region Поля
         private string fileName = "phonebook.txt";
-        private string path;
-        public Window mainWindow;
-        public Window settingsWindow;
-        private readonly Subscriber nullSubscriber = new Subscriber("_"); //  Заглушка на случай отсутствия абонента.
+        public string path;
+        //public MainWindow mainWindow;
+        //public EditWindow editWindow;
+        public readonly Subscriber nullSubscriber = new Subscriber("_"); //  Заглушка на случай отсутствия абонента.
 
         public bool isNewSubscriberNameCorrect = false;
         public string newPhoneNumber = "";
@@ -26,8 +26,8 @@ namespace Task3
         public string InputData { get; set; }
         public Subscriber SelectedSubscriber { get; set; }
         public List<Subscriber> Subscribers { get; set; }
-        public List<Item> SubscriberItemList { get; set; }
-        //public List<Subscriber> SuitableSubscribers { get; set; }
+        public List<Subscriber> SuitableSubscribers { get; set; }
+        //public Window SelectedWindow { get; set; }
         #endregion
 
         #region Методы
@@ -45,20 +45,22 @@ namespace Task3
             var data = File.ReadAllText(path);
             return JsonSerializer.Deserialize<List<Subscriber>>(data) ?? new List<Subscriber>();
         }
-        public void UpdateDataFile(State state)
-        {
-            var data = JsonSerializer.Serialize(state.Subscribers);
-            File.WriteAllText(path, data);
-        }
         #endregion
 
         #region Конструкторы
         public State()
         {
             this.Subscribers = InitSubscriberList();
-            //this.SuitableSubscribers = this.Subscribers;
+            this.SuitableSubscribers = this.Subscribers;
             this.InputData = "";
-            //this.SelectedSubscriber = this.Subscribers[0] ?? nullSubscriber;
+            if (this.Subscribers.Count > 0)
+            {
+                this.SelectedSubscriber = this.Subscribers[0];
+            }
+            else
+            {
+                this.SelectedSubscriber = nullSubscriber;
+            }
         }
         #endregion
     }

@@ -27,31 +27,33 @@ namespace Task3
         #region Методы
 
         #region Subscribers CRUD
-        public void AddNewSubscriber(State state)
+        public void AddNewSubscriber()
         {
             state.Subscribers.Add(new Subscriber(state.InputData));
             state.Subscribers.Sort((a, b) => string.Compare(a.Name, b.Name));
-            SubscriberListChanged?.Invoke(state);
+            SubscriberListChanged?.Invoke();
         }
-        public void DeleteSubscriber(State state)
+        public void DeleteSubscriber()
         {
             state.Subscribers.RemoveAll(s => s.Name == this.state.InputData);
-            SubscriberListChanged?.Invoke(state);
+            SubscriberListChanged?.Invoke();
         }
-        public void DeleteAllSubscriber(State state)
+        public void DeleteAllSubscriber()
         {
             state.Subscribers.RemoveAll(s => true);
-            SubscriberListChanged?.Invoke(state);
+            SubscriberListChanged?.Invoke();
         }
         #endregion
 
         #region PhoneNumbers CRUD
-        public void AddNewPhoneNumber(State state)
+        public void AddNewPhoneNumber()
         {
-            if (state.isNewPhoneNumberCorrect)
-            {
-                state.SelectedSubscriber.PhoneNumberList.Add(this.state.newPhoneNumber);
-            }
+            //if (state.isNewPhoneNumberCorrect)
+            //{
+            //    state.SelectedSubscriber.PhoneNumberList.Add(state.InputData);
+            //}
+            state.SelectedSubscriber.PhoneNumberList.Add(state.InputData);
+            PhoneNumberListChanged?.Invoke();
         }
         #endregion
         public bool CheckNewPhoneNumber(string number)
@@ -65,8 +67,9 @@ namespace Task3
         #endregion
 
         #region Делегаты и события
-        public delegate void PhoneBookHandler(State state);
+        public delegate void PhoneBookHandler();
         public event PhoneBookHandler SubscriberListChanged;
+        public event PhoneBookHandler PhoneNumberListChanged;
         #endregion
 
         #region Конструкторы
