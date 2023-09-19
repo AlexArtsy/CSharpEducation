@@ -53,13 +53,13 @@ namespace Task3
             if (MainWindow.isSelected)
             {
                 State.InputData = this.MainWindow.SelectedInputArea.Value;
-                this.MainWindow.Inputs[0].isCorrect = !State.newSubscriberRegex.IsMatch(State.InputData);
+                this.MainWindow.Inputs[0].isCorrect = State.newSubscriberRegex.IsMatch(State.InputData);
                 return;
             }
             if (EditWindow.isSelected)
             {
                 State.InputData = this.EditWindow.SelectedInputArea.Value;
-                this.EditWindow.Inputs[0].isCorrect = !State.newPhoneNumberRegex.IsMatch(State.InputData);
+                this.EditWindow.Inputs[0].isCorrect = State.newPhoneNumberRegex.IsMatch(State.InputData);
                 return;
             }
         }

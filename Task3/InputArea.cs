@@ -20,7 +20,7 @@ namespace Task3
             var y = outerY + this.YStartRenderingPosition;
             Console.SetCursorPosition(x, y);
 
-            if (this.isCorrect)
+            if (!this.isCorrect)
             {
                 this.BackgroundColor = ConsoleColor.Red;
             }

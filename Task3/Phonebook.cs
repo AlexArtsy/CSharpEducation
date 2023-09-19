@@ -19,9 +19,11 @@ namespace Task3
         private static PhoneBook instance;
         private string[] messages =
         {
-            "",
+            "Номер должен быть не пустым",
             "Такой абонент уже есть в книге",
             "Некорректный номер телефона",
+            "Такой номер уже есть",
+            "Вы не ввели имя абонента",
         };
         #endregion
 
@@ -87,19 +89,27 @@ namespace Task3
         {
             if (IsEmpty(number))
             {
-                PrintMessage("AHTUNG!!!!");
+                PrintMessage(messages[0]);
                 return false;
             }
             if(state.SelectedSubscriber.PhoneNumberList.Contains(state.InputData))
             {
+                PrintMessage(messages[3]);
                 return false;
             }
-            return state.newPhoneNumberRegex.IsMatch(number);
+
+            if (!state.newPhoneNumberRegex.IsMatch(number))
+            {
+                PrintMessage(messages[2]);
+                return false;
+            }
+            return true;
         }
         private bool CheckNewSubscriberName(string name)
         {
             if (IsEmpty(name))
             {
+                PrintMessage(messages[4]);
                 return false;
             }
 
