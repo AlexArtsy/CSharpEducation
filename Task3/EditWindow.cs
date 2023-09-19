@@ -30,7 +30,6 @@ namespace Task3
             Console.SetCursorPosition(1, 5);
             Console.Write("Новый номер:");
         }
-
         public void UpdatePhoneNumberList(State state)
         {
             var itemList = new List<Item>();
@@ -43,11 +42,6 @@ namespace Task3
                 itemList.Add(newItem);
                 i += 1;
             });
-            //if (itemList.Count == 1)
-            //{
-            //    state.SelectedNumber = itemList[0].Value;
-            //    itemList[0].isSelected = true;
-            //}
             this.Areas[0].List = itemList;
         }
         #endregion

@@ -38,6 +38,11 @@ namespace Task3
                 }
             }
         }
+        public void SwitchWindows()
+        {
+            this.MainWindow.isSelected = !this.MainWindow.isSelected;
+            this.EditWindow.isSelected = !this.EditWindow.isSelected;
+        }
         public void SetInputData()
         {
             if (MainWindow.isSelected)
@@ -67,6 +72,21 @@ namespace Task3
                 return;
             }
         }
+        public void SetSelectedSubscriber()
+        {
+            State.SelectedSubscriber = State.SuitableSubscribers.Count > 0 ? State.SuitableSubscribers[0] : State.nullSubscriber;
+        }
+        public void SetSelectedNumber()
+        {
+            State.SelectedNumber = State.SelectedSubscriber.PhoneNumberList.Count > 0
+                ? State.SelectedSubscriber.PhoneNumberList[0]
+                : "";
+        }
+        public void SetSuitableSubscribers()
+        {
+            State.SuitableSubscribers = State.Subscribers.FindAll(s => s.Name.Contains(State.InputData));
+        }
+
         public void DoMenuAction()
         {
             if (MainWindow.isSelected)
@@ -80,20 +100,12 @@ namespace Task3
                 return;
             }
         }
-        public void SwitchWindows()
-        {
-            this.MainWindow.isSelected = !this.MainWindow.isSelected;
-            this.EditWindow.isSelected = !this.EditWindow.isSelected;
-        }
+        
         public void UpdateDataFile()
         {
             var data = JsonSerializer.Serialize(State.Subscribers);
             File.WriteAllText(State.path, data);
         }
-        public void SetSuitableSubscribers()
-        {
-            State.SuitableSubscribers = State.Subscribers.FindAll(s => s.Name.Contains(State.InputData));
-        } 
         public void UpdateSubscriberList()
         {
             this.MainWindow.UpdateSubscriberList(State);
@@ -105,70 +117,52 @@ namespace Task3
             if (EditWindow.isSelected)
             {
                 this.EditWindow.UpdatePhoneNumberList(State);
-                return;
             }
         }
-        public void SetSelectedSubscriber()
-        {
-            if (State.SuitableSubscribers.Count > 0)
-            {
-                State.SelectedSubscriber = State.SuitableSubscribers[0];
-            }
-            else
-            {
-                State.SelectedSubscriber = State.nullSubscriber;
-            }
-        }
-        public void SetSelectedNumber()
+        
+        public void ShiftUpSelectedNumber()
         {
             if (State.SelectedSubscriber.PhoneNumberList.Count > 0)
             {
-                State.SelectedNumber = State.SelectedSubscriber.PhoneNumberList[0];
+                var itemList = this.EditWindow.Areas[0].List;
+                var selectedId = itemList.Find(l => l.isSelected).Id;
+                var newId = selectedId == 0 ? itemList.Count - 1 : selectedId - 1;
+                var number = itemList.Find(l => l.Id == newId).Value;
+                State.SelectedNumber = itemList.Find(s => s.Value == number).Value;
             }
-            else
-            {
-                State.SelectedNumber = "";
-            }
-        }
-        public void ShiftUpSelectedNumber()
-        {
-            if (State.SelectedSubscriber.PhoneNumberList.Count == 0)
-            {
-                return;
-            }
-            var itemList = this.EditWindow.Areas[0].List;
-            var selectedId = itemList.Find(l => l.isSelected).Id;
-            var newId = selectedId == 0 ? itemList.Count - 1 : selectedId - 1;
-            var number = itemList.Find(l => l.Id == newId).Value;
-            State.SelectedNumber = itemList.Find(s => s.Value == number).Value;
         }
         public void ShiftDownSelectedNumber()
         {
-            if (State.SelectedSubscriber.PhoneNumberList.Count == 0)
+            if (State.SelectedSubscriber.PhoneNumberList.Count > 0)
             {
-                return;
+                var itemList = this.EditWindow.Areas[0].List;
+                var selectedId = itemList.Find(l => l.isSelected).Id;
+                var newId = selectedId == itemList.Count - 1 ? 0 : selectedId + 1;
+                var number = itemList.Find(l => l.Id == newId).Value;
+                State.SelectedNumber = itemList.Find(s => s.Value == number).Value;
             }
-            var itemList = this.EditWindow.Areas[0].List;
-            var selectedId = itemList.Find(l => l.isSelected).Id;
-            var newId = selectedId == itemList.Count - 1 ? 0 : selectedId + 1;
-            var number = itemList.Find(l => l.Id == newId).Value;
-            State.SelectedNumber = itemList.Find(s => s.Value == number).Value;
         }
         public void ShiftUpSelectedSubscriber()
         {
-            var itemList = this.MainWindow.Areas[0].List;
-            var selectedId = itemList.Find(l => l.isSelected).Id;
-            var newId = selectedId == 0 ? itemList.Count - 1 : selectedId - 1;
-            var name = itemList.Find(l => l.Id == newId).Value;
-            State.SelectedSubscriber = State.Subscribers.Find(s => s.Name == name);
+            if (this.State.Subscribers.Count > 0)
+            {
+                var itemList = this.MainWindow.Areas[0].List;
+                var selectedId = itemList.Find(l => l.isSelected).Id;
+                var newId = selectedId == 0 ? itemList.Count - 1 : selectedId - 1;
+                var name = itemList.Find(l => l.Id == newId).Value;
+                State.SelectedSubscriber = State.Subscribers.Find(s => s.Name == name);
+            }
         }
         public void ShiftDownSelectedSubscriber()
         {
-            var itemList = this.MainWindow.Areas[0].List;
-            var selectedId = itemList.Find(l => l.isSelected).Id;
-            var newId = selectedId == itemList.Count - 1 ? 0 : selectedId + 1;
-            var name = itemList.Find(l => l.Id == newId).Value;
-            State.SelectedSubscriber = State.Subscribers.Find(s => s.Name == name);
+            if (this.State.Subscribers.Count > 0)
+            {
+                var itemList = this.MainWindow.Areas[0].List;
+                var selectedId = itemList.Find(l => l.isSelected).Id;
+                var newId = selectedId == itemList.Count - 1 ? 0 : selectedId + 1;
+                var name = itemList.Find(l => l.Id == newId).Value;
+                State.SelectedSubscriber = State.Subscribers.Find(s => s.Name == name);
+            }
         }
         public void UpdateMainWindowAreas()
         {
@@ -182,15 +176,9 @@ namespace Task3
             UpdatePhoneNumberList();
             this.EditWindow.UpdateArea();
         }
-        #endregion
 
-        #region Конструкторы
-        public Control(State state, MainWindow mainWindow, EditWindow editWindow, PhoneBook phoneBook)
+        private void InitMainWindowKeyEvents()
         {
-            this.State = state;
-            this.MainWindow = mainWindow;
-            this.EditWindow = editWindow;
-
             this.MainWindow.BackspacePressed += SetInputData;
             this.MainWindow.BackspacePressed += SetSuitableSubscribers;
             this.MainWindow.BackspacePressed += SetSelectedSubscriber;
@@ -209,17 +197,11 @@ namespace Task3
 
             this.MainWindow.EnterPressed += DoMenuAction;
             this.MainWindow.TabPressed += SwitchWindows;
-
-            this.MainWindow.MenuList[0].Items[0].Do += phoneBook.AddNewSubscriber;
-            this.MainWindow.MenuList[0].Items[1].Do = SwitchWindows;
-            this.MainWindow.MenuList[0].Items[2].Do = phoneBook.DeleteSubscriber;
-            this.MainWindow.MenuList[0].Items[3].Do = phoneBook.DeleteAllSubscriber;
-
+        }
+        private void InitEditWindowKeyEvents()
+        {
             this.EditWindow.BackspacePressed += SetInputData;
-            //this.EditWindow.BackspacePressed += SetSelectedNumber;
-
             this.EditWindow.EnyKeyPressed += SetInputData;
-            //this.EditWindow.EnyKeyPressed += SetSelectedNumber;
 
             this.EditWindow.UpArrowPressed += ShiftUpSelectedNumber;
             this.EditWindow.UpArrowPressed += UpdateEditWindowAreas;
@@ -229,23 +211,48 @@ namespace Task3
 
             this.EditWindow.EnterPressed += DoMenuAction;
             this.EditWindow.TabPressed += SwitchWindows;
-
+        }
+        private void InitMainWindowMenuEvents(PhoneBook book)
+        {
+            this.MainWindow.MenuList[0].Items[0].Do += book.AddNewSubscriber;
+            this.MainWindow.MenuList[0].Items[1].Do = SwitchWindows;
+            this.MainWindow.MenuList[0].Items[2].Do = book.DeleteSubscriber;
+            this.MainWindow.MenuList[0].Items[3].Do = book.DeleteAllSubscriber;
+        }
+        private void InitEditWindowMenuEvents(PhoneBook book)
+        {
             this.EditWindow.MenuList[0].Items[0].Do = SwitchWindows;
-            this.EditWindow.MenuList[0].Items[1].Do = phoneBook.AddNewPhoneNumber;
-            this.EditWindow.MenuList[0].Items[2].Do = phoneBook.EditPhoneNumber;
-            this.EditWindow.MenuList[0].Items[3].Do = phoneBook.DeletePhoneNumber;
-            this.EditWindow.MenuList[0].Items[4].Do = phoneBook.DeleteAllPhoneNumber;
+            this.EditWindow.MenuList[0].Items[1].Do = book.AddNewPhoneNumber;
+            this.EditWindow.MenuList[0].Items[2].Do = book.EditPhoneNumber;
+            this.EditWindow.MenuList[0].Items[3].Do = book.DeletePhoneNumber;
+            this.EditWindow.MenuList[0].Items[4].Do = book.DeleteAllPhoneNumber;
+        }
+        private void SubscribePhoneBookEvents(PhoneBook book)
+        {
+            book.SubscriberListChanged += UpdateDataFile;
+            book.SubscriberListChanged += SetSuitableSubscribers;
+            book.SubscriberListChanged += SetSelectedSubscriber;
+            book.SubscriberListChanged += UpdateMainWindowAreas;
 
-            phoneBook.SubscriberListChanged += UpdateDataFile;
-            phoneBook.SubscriberListChanged += SetSuitableSubscribers;
-            phoneBook.SubscriberListChanged += SetSelectedSubscriber;
-            phoneBook.SubscriberListChanged += UpdateMainWindowAreas;
+            book.PhoneNumberListChanged += UpdateDataFile;
+            book.PhoneNumberListChanged += SetSelectedNumber;
+            book.PhoneNumberListChanged += UpdatePhoneNumberList;
+            book.PhoneNumberListChanged += EditWindow.UpdateArea;
+        }
+        #endregion
 
-            phoneBook.PhoneNumberListChanged += UpdateDataFile;
-            phoneBook.PhoneNumberListChanged += SetSelectedNumber;
-            phoneBook.PhoneNumberListChanged += UpdatePhoneNumberList;
-            phoneBook.PhoneNumberListChanged += EditWindow.UpdateArea;
-            //phoneBook.PhoneNumberListChanged += MainWindow.UpdatePhoneNumberList();
+        #region Конструкторы
+        public Control(State state, MainWindow mainWindow, EditWindow editWindow, PhoneBook phoneBook)
+        {
+            this.State = state;
+            this.MainWindow = mainWindow;
+            this.EditWindow = editWindow;
+
+            InitMainWindowKeyEvents();
+            InitEditWindowKeyEvents();
+            InitMainWindowMenuEvents(phoneBook);
+            InitEditWindowMenuEvents(phoneBook);
+            SubscribePhoneBookEvents(phoneBook);
         }
         #endregion
     }
