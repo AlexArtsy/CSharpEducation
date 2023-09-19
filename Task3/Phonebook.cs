@@ -75,9 +75,12 @@ namespace Task3
         }
         public void EditPhoneNumber()
         {
-            var index = state.SelectedSubscriber.PhoneNumberList.IndexOf(state.SelectedNumber);
-            state.SelectedSubscriber.PhoneNumberList[index] = state.InputData;
-            PhoneNumberListChanged?.Invoke();
+            if (CheckNewPhoneNumber(state.InputData))
+            {
+                var index = state.SelectedSubscriber.PhoneNumberList.IndexOf(state.SelectedNumber);
+                state.SelectedSubscriber.PhoneNumberList[index] = state.InputData;
+                PhoneNumberListChanged?.Invoke();
+            }
         }
         #endregion
 

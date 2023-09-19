@@ -75,9 +75,8 @@ namespace Task3
         }
         public void SetSuitableSubscribers()
         {
-            State.SuitableSubscribers = State.Subscribers.FindAll(s => s.Name.Contains(State.InputData));
+            State.SuitableSubscribers = State.Subscribers.FindAll(s => s.Name.Contains(State.InputData) || s.PhoneNumberList.Contains(State.InputData));
         }
-
         public void DoMenuAction()
         {
             if (MainWindow.isSelected)
