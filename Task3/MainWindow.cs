@@ -18,8 +18,8 @@ namespace Task3
 
         public void RenderWindow(State state)
         {
+            Console.Clear();
             RenderCustomComponents();
-            
             this.Render(state);
         }
         public void RenderCustomComponents()

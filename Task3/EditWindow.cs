@@ -17,13 +17,15 @@ namespace Task3
 
         public void RenderWindow(State state)
         {
-            RenderCustomComponents();
+            Console.Clear();
+            RenderCustomComponents(state);
             UpdatePhoneNumberList(state);
             this.Render(state);
         }
-        public void RenderCustomComponents()
+        public void RenderCustomComponents(State state)
         {
-
+            Console.SetCursorPosition(3, 3);
+            Console.Write($"Абонент: {state.SelectedSubscriber.Name}");
         }
 
         public void UpdatePhoneNumberList(State state)

@@ -24,7 +24,6 @@ namespace Task3
 
         public void Render(State state)
         {
-            Console.Clear();
             UpdateSelectedElements(state);
             RenderMenu();
             RenderArea();
