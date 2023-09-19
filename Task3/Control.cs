@@ -104,6 +104,17 @@ namespace Task3
                 State.SelectedSubscriber = State.nullSubscriber;
             }
         }
+        public void ShiftUpSelectedSubscriber()
+        {
+            var itemList = this.MainWindow.Areas[0].List;
+            var selectedId = itemList.Find(l => l.isSelected).Id;
+            var newId = selectedId == 0 ? itemList.Count - 1 : selectedId - 1;
+            var name = itemList.Find(l => l.Id == newId).Value;
+            State.SelectedSubscriber = State.Subscribers.Find(s => s.Name == name);
+
+            
+            this.MainWindow.UpdatePhoneNumberList(this.State);
+        }
         #endregion
 
         #region Конструкторы
@@ -128,6 +139,12 @@ namespace Task3
             this.MainWindow.EnyKeyPressed += this.MainWindow.UpdateArea;
             this.MainWindow.EnyKeyPressed += UpdatePhoneNumberList;
             this.MainWindow.EnyKeyPressed += this.MainWindow.UpdateArea;
+
+            this.MainWindow.UpArrowPressed += ShiftUpSelectedSubscriber;
+            this.MainWindow.UpArrowPressed += UpdateSubscriberList;
+            this.MainWindow.UpArrowPressed += this.MainWindow.UpdateArea;
+            this.MainWindow.UpArrowPressed += UpdatePhoneNumberList;
+            this.MainWindow.UpArrowPressed += this.MainWindow.UpdateArea;
 
             this.MainWindow.EnterPressed += DoMenuAction;
             this.MainWindow.TabPressed += SwitchWindows;

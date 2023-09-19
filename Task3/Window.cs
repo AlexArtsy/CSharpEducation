@@ -90,10 +90,12 @@ namespace Task3
                     RenderMenu();
                     break;
                 case ConsoleKey.UpArrow:
-                    RenderArea();
+                    //RenderArea();
+                    UpArrowPressed?.Invoke();
                     break;
                 case ConsoleKey.DownArrow:
-                    RenderArea();
+                    //RenderArea();
+                    DownArrowPressed?.Invoke();
                     break;
                 case ConsoleKey.Enter:
                     EnterPressed?.Invoke();
