@@ -14,7 +14,7 @@ namespace Task3
         #region Поля
         private string fileName = "phonebook.txt";
         public string path;
-        public readonly Regex newSubscriberRegex = new Regex(@"^([a-zа-яё]+)$");
+        public readonly Regex newSubscriberRegex = new Regex(@"^([a-zA-Zа-яёА-Я]+)$");
         public readonly Regex newPhoneNumberRegex = new Regex(@"^[0-9 ]+$");
  
         public readonly Subscriber nullSubscriber = new Subscriber("_"); //  Заглушка на случай отсутствия абонента.
