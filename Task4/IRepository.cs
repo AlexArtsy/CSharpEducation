@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Task4
 {
-    internal interface IRepository
+    public interface IRepository<T> where T : IEntity
     {
+        void Create(T entity);
+        T Read(string id);
+        void Update(T entity);
+        void Delete(string id);
     }
 }

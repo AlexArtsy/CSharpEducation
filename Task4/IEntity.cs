@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Task4
 {
-    internal interface IEntity
+    public interface IEntity
     {
+        string Id { get; set; }
     }
 }
