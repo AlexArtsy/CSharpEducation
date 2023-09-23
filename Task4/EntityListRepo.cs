@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace Task4
 {
-    internal class EntityListRepository<T> : IRepository<T> where T : IEntity
+    internal class EntityListRepo<T> : IRepository<T> where T : IEntity
     {
-        #region Поля
-        #endregion
-
         #region Свойства
         public List<T> Storage { get; set; }
         #endregion
@@ -43,7 +40,7 @@ namespace Task4
         #endregion
 
         #region Конструкторы
-        public EntityListRepository(List<T> storage)
+        public EntityListRepo(List<T> storage)
         {
             this.Storage = storage;
         }
