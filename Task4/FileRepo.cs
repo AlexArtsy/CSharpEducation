@@ -7,9 +7,8 @@ namespace Task4
     {
         #region Поля
         private readonly string filepath;
-        private List<T> fileData;
+        private EntityListRepo<T> fileData;
         private bool disposed = false;
-        private FileInfo fileInfo;
         private DateTime lastWriteTime;
         #endregion
 
@@ -19,32 +18,28 @@ namespace Task4
         {
             UpdateFileDataWhenChanged();
 
-            this.fileData.Add(entity);
+            this.fileData.Create(entity);
         }
 
         public T Read(string id)
         {
             UpdateFileDataWhenChanged();
 
-            return this.fileData.Find(e => e.Id == id);
+            return this.fileData.Read(id);
         }
 
         public void Update(T entity)
         {
             UpdateFileDataWhenChanged();
 
-            this.fileData[this.fileData.FindIndex(e => e.Id == entity.Id)] = entity;
+            this.fileData.Update(entity);
         }
 
         public void Delete(string id)
         {
             UpdateFileDataWhenChanged();
 
-            if (!this.fileData.Remove(this.fileData.Find(e => e.Id == id)))
-            {
-                throw new Exception("Удаление не произошло: сущность не обнаружена в файле");
-                return;
-            }
+            this.fileData.Delete(id);
         }
         #endregion
 
@@ -54,14 +49,17 @@ namespace Task4
                 SetFileData();
         }
 
-        private List<T> SetFileData()
+        private void SetFileData()
         {
-            return JsonSerializer.Deserialize<List<T>>(File.ReadAllText(this.filepath));
+            var data = JsonSerializer.Deserialize<List<T>>(File.ReadAllText(this.filepath));
+            this.fileData = new EntityListRepo<T>(data);
         }
 
         private bool IsFileChanged()
         {
-            return this.fileInfo.LastWriteTime != this.lastWriteTime;
+
+            var fileInfo = new FileInfo(this.filepath);
+            return fileInfo.LastWriteTime != this.lastWriteTime;
         }
 
         public void Dispose()
@@ -86,8 +84,7 @@ namespace Task4
         public FileRepo(string filepath)
         {
             this.filepath = filepath;
-            this.fileInfo = new FileInfo(filepath);
-            this.fileData = SetFileData();
+            SetFileData();
         }
         #endregion
 
