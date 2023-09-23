@@ -13,10 +13,6 @@ namespace Task4
         private DateTime lastWriteTime;
         #endregion
 
-        #region Свойства
-
-        #endregion
-
         #region Методы
         #region CRUD
         public void Create(T entity)
