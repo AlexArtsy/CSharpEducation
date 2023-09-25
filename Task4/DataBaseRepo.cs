@@ -20,6 +20,7 @@ namespace Task4
         {
             using (SqlConnection connection = new SqlConnection(this.connectionString))
             {
+                connection.Open();
                 SqlCommand command = new SqlCommand();
                 command.CommandText = $"INSERT INTO {connection.Database}(Id, Name, Age) VALUES({entity.Id}, {entity.Name}, {entity.Age})";
                 command.Connection = connection;
@@ -33,6 +34,7 @@ namespace Task4
 
             using (SqlConnection connection = new SqlConnection(this.connectionString))
             {
+                connection.Open();
                 SqlCommand command = new SqlCommand();
                 command.CommandText = $"SELECT Id, Name, Age FROM {connection.Database} WHERE Id='{id}'";
                 command.Connection = connection;
@@ -62,6 +64,7 @@ namespace Task4
         {
             using (SqlConnection connection = new SqlConnection(this.connectionString))
             {
+                connection.Open();
                 SqlCommand command = new SqlCommand();
                 command.CommandText = $"UPDATE {connection.Database} SET Age={entity.Age}, Name='{entity.Name}' WHERE Id='{entity.Id}'";
                 command.Connection = connection;
@@ -73,6 +76,7 @@ namespace Task4
         {
             using (SqlConnection connection = new SqlConnection(this.connectionString))
             {
+                connection.Open();
                 SqlCommand command = new SqlCommand();
                 command.CommandText = $"DELETE FROM {connection.Database} WHERE Id='{id}'";
                 command.Connection = connection;
